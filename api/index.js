@@ -13,14 +13,14 @@ import newArrivalRoutes from '../server/routes/newArrivals.js'
 
 dotenv.config()
 
-// MongoDB connection for serverless
-let cachedConnection = null
+// MongoDB connection for serverless with caching
+let isConnected = false
 
 const connectDB = async () => {
-  // Return cached connection if available
-  if (cachedConnection && mongoose.connection.readyState === 1) {
-    console.log('Using cached MongoDB connection')
-    return cachedConnection
+  // Use cached connection if available
+  if (isConnected && mongoose.connection.readyState === 1) {
+    console.log('✅ Using cached MongoDB connection')
+    return
   }
 
   // Check if MONGODB_URI exists
@@ -29,25 +29,28 @@ const connectDB = async () => {
   }
 
   try {
-    // Disconnect if in connecting state
-    if (mongoose.connection.readyState === 2) {
+    // Set mongoose options globally
+    mongoose.set('strictQuery', false)
+    
+    // Disconnect if in connecting/disconnecting state
+    if (mongoose.connection.readyState === 2 || mongoose.connection.readyState === 3) {
       await mongoose.disconnect()
     }
 
-    // Connect with proper options for serverless
-    const connection = await mongoose.connect(process.env.MONGODB_URI, {
-      bufferCommands: false, // Disable buffering - wait for connection
-      serverSelectionTimeoutMS: 10000,
-      socketTimeoutMS: 45000,
-      maxPoolSize: 10,
-    })
-    
-    cachedConnection = connection
-    console.log('✅ MongoDB Connected (Serverless)')
-    return connection
+    // Only connect if not already connected
+    if (mongoose.connection.readyState !== 1) {
+      await mongoose.connect(process.env.MONGODB_URI, {
+        bufferCommands: false,
+        serverSelectionTimeoutMS: 10000,
+        socketTimeoutMS: 45000,
+      })
+      
+      isConnected = true
+      console.log('✅ MongoDB Connected (Serverless)')
+    }
   } catch (error) {
     console.error('❌ MongoDB Connection Error:', error.message)
-    cachedConnection = null
+    isConnected = false
     throw new Error(`MongoDB connection failed: ${error.message}`)
   }
 }
@@ -96,7 +99,19 @@ app.use((err, req, res, next) => {
 })
 
 // Export handler for Vercel
-export default async (req, res) => {
+export default async function handler(req, res) {
+  // Set CORS headers
+  res.setHeader('Access-Control-Allow-Credentials', 'true')
+  res.setHeader('Access-Control-Allow-Origin', '*')
+  res.setHeader('Access-Control-Allow-Methods', 'GET,OPTIONS,PATCH,DELETE,POST,PUT')
+  res.setHeader('Access-Control-Allow-Headers', 'X-CSRF-Token, X-Requested-With, Accept, Accept-Version, Content-Length, Content-MD5, Content-Type, Date, X-Api-Version, Authorization')
+  
+  // Handle preflight
+  if (req.method === 'OPTIONS') {
+    res.status(200).end()
+    return
+  }
+
   // Set JSON content type
   res.setHeader('Content-Type', 'application/json')
   
@@ -120,13 +135,8 @@ export default async (req, res) => {
       })
     }
 
-    // Connect to MongoDB BEFORE handling request
+    // Connect to MongoDB
     await connectDB()
-    
-    // Wait a bit to ensure connection is ready
-    if (mongoose.connection.readyState !== 1) {
-      throw new Error('MongoDB connection not ready')
-    }
     
     // Handle the request with Express
     return app(req, res)
