@@ -61,6 +61,14 @@ app.use('/api/orders', orderRoutes)
 app.use('/api/upload', uploadRoutes)
 app.use('/api/new-arrivals', newArrivalRoutes)
 
+// Catch-all for undefined API routes
+app.use('/api/*', (req, res) => {
+  res.status(404).json({
+    success: false,
+    message: `API route not found: ${req.method} ${req.originalUrl}`
+  })
+})
+
 // Error handling
 app.use((err, req, res, next) => {
   console.error('Error:', err)
