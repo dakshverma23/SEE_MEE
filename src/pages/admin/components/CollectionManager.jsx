@@ -168,17 +168,13 @@ const CollectionManager = () => {
       const data = await response.json()
       
       if (data.success) {
-        // Store the complete image objects with base64 data
-        const imageObjects = data.data.map(img => ({
-          data: img.data,
-          contentType: img.contentType,
-          filename: img.filename
-        }))
+        // Extract Cloudinary URLs from response
+        const imageUrls = data.data.map(img => img.url)
         setFormData(prev => ({
           ...prev,
-          images: imageObjects
+          images: imageUrls
         }))
-        alert(`${imageObjects.length} image(s) uploaded successfully!`)
+        alert(`${imageUrls.length} image(s) uploaded successfully!`)
       } else {
         alert('Failed to upload images: ' + (data.message || 'Unknown error'))
       }
@@ -207,15 +203,12 @@ const CollectionManager = () => {
 
       const data = await response.json()
       if (data.success) {
-        // Store the complete video object with base64 data
+        // Store the Cloudinary video URL
         setFormData(prev => ({ 
           ...prev, 
-          video: {
-            data: data.data.data,
-            contentType: data.data.contentType,
-            filename: data.data.filename
-          }
+          video: data.data.url
         }))
+        alert('Video uploaded successfully!')
       }
     } catch (error) {
       alert('Failed to upload video')
