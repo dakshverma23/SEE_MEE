@@ -22,11 +22,18 @@ const connectDB = async () => {
   }
 
   try {
-    if (mongoose.connection.readyState === 0) {
-      await mongoose.connect(process.env.MONGODB_URI, {
-        bufferCommands: false,
-      })
+    // Disconnect if in connecting state
+    if (mongoose.connection.readyState === 2) {
+      await mongoose.disconnect()
     }
+
+    // Connect with proper options for serverless
+    await mongoose.connect(process.env.MONGODB_URI, {
+      bufferCommands: true, // Enable buffering for serverless
+      serverSelectionTimeoutMS: 5000,
+      socketTimeoutMS: 45000,
+    })
+    
     isConnected = true
     console.log('✅ MongoDB Connected (Serverless)')
   } catch (error) {
