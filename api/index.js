@@ -14,11 +14,18 @@ import newArrivalRoutes from '../server/routes/newArrivals.js'
 dotenv.config()
 
 // MongoDB connection for serverless
-let isConnected = false
+let cachedConnection = null
 
 const connectDB = async () => {
-  if (isConnected && mongoose.connection.readyState === 1) {
-    return
+  // Return cached connection if available
+  if (cachedConnection && mongoose.connection.readyState === 1) {
+    console.log('Using cached MongoDB connection')
+    return cachedConnection
+  }
+
+  // Check if MONGODB_URI exists
+  if (!process.env.MONGODB_URI) {
+    throw new Error('MONGODB_URI environment variable is not defined')
   }
 
   try {
@@ -28,18 +35,20 @@ const connectDB = async () => {
     }
 
     // Connect with proper options for serverless
-    await mongoose.connect(process.env.MONGODB_URI, {
-      bufferCommands: true, // Enable buffering for serverless
-      serverSelectionTimeoutMS: 5000,
+    const connection = await mongoose.connect(process.env.MONGODB_URI, {
+      bufferCommands: false, // Disable buffering - wait for connection
+      serverSelectionTimeoutMS: 10000,
       socketTimeoutMS: 45000,
+      maxPoolSize: 10,
     })
     
-    isConnected = true
+    cachedConnection = connection
     console.log('✅ MongoDB Connected (Serverless)')
+    return connection
   } catch (error) {
-    console.error('❌ MongoDB Connection Error:', error)
-    isConnected = false
-    throw error
+    console.error('❌ MongoDB Connection Error:', error.message)
+    cachedConnection = null
+    throw new Error(`MongoDB connection failed: ${error.message}`)
   }
 }
 
@@ -88,18 +97,52 @@ app.use((err, req, res, next) => {
 
 // Export handler for Vercel
 export default async (req, res) => {
+  // Set JSON content type
+  res.setHeader('Content-Type', 'application/json')
+  
   try {
-    // Connect to MongoDB
+    // Check if environment variables are set
+    if (!process.env.MONGODB_URI) {
+      console.error('❌ MONGODB_URI not set')
+      return res.status(500).json({ 
+        success: false, 
+        message: 'Server configuration error: MONGODB_URI not set',
+        hint: 'Please set environment variables in Vercel dashboard'
+      })
+    }
+
+    if (!process.env.JWT_SECRET) {
+      console.error('❌ JWT_SECRET not set')
+      return res.status(500).json({ 
+        success: false, 
+        message: 'Server configuration error: JWT_SECRET not set',
+        hint: 'Please set environment variables in Vercel dashboard'
+      })
+    }
+
+    // Connect to MongoDB BEFORE handling request
     await connectDB()
+    
+    // Wait a bit to ensure connection is ready
+    if (mongoose.connection.readyState !== 1) {
+      throw new Error('MongoDB connection not ready')
+    }
     
     // Handle the request with Express
     return app(req, res)
   } catch (error) {
-    console.error('Serverless function error:', error)
+    console.error('❌ Serverless function error:', error.message)
+    
+    // Return proper JSON error
     return res.status(500).json({ 
       success: false, 
-      message: 'Internal server error',
-      error: error.message 
+      message: 'Server error',
+      error: error.message,
+      hint: error.message.includes('MONGODB_URI') 
+        ? 'Check environment variables in Vercel dashboard'
+        : error.message.includes('connection')
+        ? 'Check MongoDB Atlas IP whitelist (allow 0.0.0.0/0)'
+        : 'Check Vercel function logs for details'
     })
   }
 }
