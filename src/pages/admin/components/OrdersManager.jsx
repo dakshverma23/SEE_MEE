@@ -1,5 +1,6 @@
 import { useState, useEffect } from 'react'
 import { motion } from 'framer-motion'
+import { getImageUrl } from '../../../utils/imageHelper'
 import './OrdersManager.css'
 
 const OrdersManager = () => {
@@ -14,7 +15,7 @@ const OrdersManager = () => {
   const fetchOrders = async () => {
     try {
       const token = localStorage.getItem('adminToken')
-      const response = await fetch('http://localhost:5000/api/orders', {
+      const response = await fetch('/api/orders', {
         headers: { 'Authorization': `Bearer ${token}` }
       })
       const data = await response.json()
@@ -29,7 +30,7 @@ const OrdersManager = () => {
   const updateOrderStatus = async (orderId, newStatus) => {
     try {
       const token = localStorage.getItem('adminToken')
-      const response = await fetch(`http://localhost:5000/api/orders/${orderId}/status`, {
+      const response = await fetch(`/api/orders/${orderId}/status`, {
         method: 'PUT',
         headers: {
           'Content-Type': 'application/json',
@@ -196,7 +197,7 @@ const OrdersManager = () => {
                 {selectedOrder.items.map((item, idx) => (
                   <div key={idx} className="order-item-detail">
                     <div className="item-image">
-                      {item.image && <img src={`http://localhost:5000${item.image}`} alt={item.name} />}
+                      {item.image && <img src={getImageUrl(item.image)} alt={item.name} />}
                     </div>
                     <div className="item-info">
                       <p><strong>{item.name}</strong></p>

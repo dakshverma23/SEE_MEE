@@ -34,13 +34,13 @@ const AdminDashboard = () => {
       const token = localStorage.getItem('adminToken')
       
       // Fetch orders
-      const ordersRes = await fetch('http://localhost:5000/api/orders', {
+      const ordersRes = await fetch('/api/orders', {
         headers: { 'Authorization': `Bearer ${token}` }
       })
       const ordersData = await ordersRes.json()
       
       // Fetch products
-      const productsRes = await fetch('http://localhost:5000/api/products')
+      const productsRes = await fetch('/api/products')
       const productsData = await productsRes.json()
 
       if (ordersData.success && productsData.success) {

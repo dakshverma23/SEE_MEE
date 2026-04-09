@@ -17,7 +17,7 @@ const NewArrivalsManager = () => {
 
   const fetchArrivals = async () => {
     try {
-      const response = await fetch('http://localhost:5000/api/new-arrivals')
+      const response = await fetch('/api/new-arrivals')
       const data = await response.json()
       
       if (data.success) {
@@ -45,7 +45,7 @@ const NewArrivalsManager = () => {
       const formData = new FormData()
       formData.append('image', file)
 
-      const uploadRes = await fetch('http://localhost:5000/api/upload/image', {
+      const uploadRes = await fetch('/api/upload/image', {
         method: 'POST',
         headers: { 'Authorization': `Bearer ${token}` },
         body: formData
@@ -58,7 +58,7 @@ const NewArrivalsManager = () => {
       }
 
       // Update new arrival with Cloudinary URL
-      const updateRes = await fetch(`http://localhost:5000/api/new-arrivals/${category}`, {
+      const updateRes = await fetch(`/api/new-arrivals/${category}`, {
         method: 'PUT',
         headers: {
           'Content-Type': 'application/json',

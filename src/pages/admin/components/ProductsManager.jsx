@@ -40,7 +40,7 @@ const ProductsManager = () => {
   const checkCollectionNotifications = async () => {
     try {
       const token = localStorage.getItem('adminToken')
-      const response = await fetch('http://localhost:5000/api/products?inCollection=true', {
+      const response = await fetch('/api/products?inCollection=true', {
         headers: { 'Authorization': `Bearer ${token}` }
       })
       const data = await response.json()
@@ -67,7 +67,7 @@ const ProductsManager = () => {
 
   const fetchProducts = async () => {
     try {
-      const response = await fetch('http://localhost:5000/api/products')
+      const response = await fetch('/api/products')
       const data = await response.json()
       if (data.success) {
         setProducts(data.data)
@@ -94,7 +94,7 @@ const ProductsManager = () => {
 
       console.log('Uploading images...') // Debug log
 
-      const response = await fetch('http://localhost:5000/api/upload/images', {
+      const response = await fetch('/api/upload/images', {
         method: 'POST',
         headers: { 'Authorization': `Bearer ${token}` },
         body: uploadFormData
@@ -145,7 +145,7 @@ const ProductsManager = () => {
       const formDataVideo = new FormData()
       formDataVideo.append('video', file)
 
-      const response = await fetch('http://localhost:5000/api/upload/video', {
+      const response = await fetch('/api/upload/video', {
         method: 'POST',
         headers: { 'Authorization': `Bearer ${token}` },
         body: formDataVideo
@@ -182,8 +182,8 @@ const ProductsManager = () => {
     try {
       const token = localStorage.getItem('adminToken')
       const url = editingProduct 
-        ? `http://localhost:5000/api/products/${editingProduct._id}`
-        : 'http://localhost:5000/api/products'
+        ? `/api/products/${editingProduct._id}`
+        : '/api/products'
       
       // Calculate total stock from sizeStock
       const totalStock = formData.sizeStock.reduce((sum, item) => sum + item.quantity, 0)
@@ -235,7 +235,7 @@ const ProductsManager = () => {
 
     try {
       const token = localStorage.getItem('adminToken')
-      const response = await fetch(`http://localhost:5000/api/products/${id}`, {
+      const response = await fetch(`/api/products/${id}`, {
         method: 'DELETE',
         headers: { 'Authorization': `Bearer ${token}` }
       })

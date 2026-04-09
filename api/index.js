@@ -73,19 +73,25 @@ async function createApp() {
     })
   })
 
-  // Dynamically import routes
+  // Dynamically import routes - wrap in try-catch to handle import errors
   try {
     const { default: authRoutes } = await import('../server/routes/auth.js')
     const { default: productRoutes } = await import('../server/routes/products.js')
     const { default: orderRoutes } = await import('../server/routes/orders.js')
-    const { default: uploadRoutes } = await import('../server/routes/upload.js')
     const { default: newArrivalRoutes } = await import('../server/routes/newArrivals.js')
 
     app.use('/api/auth', authRoutes)
     app.use('/api/products', productRoutes)
     app.use('/api/orders', orderRoutes)
-    app.use('/api/upload', uploadRoutes)
     app.use('/api/new-arrivals', newArrivalRoutes)
+
+    // Only load upload routes if Cloudinary is configured
+    if (process.env.CLOUDINARY_CLOUD_NAME) {
+      const { default: uploadRoutes } = await import('../server/routes/upload.js')
+      app.use('/api/upload', uploadRoutes)
+    } else {
+      console.warn('⚠️ Cloudinary not configured, upload routes disabled')
+    }
   } catch (error) {
     console.error('❌ Route import error:', error)
     throw error
