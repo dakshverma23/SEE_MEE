@@ -8,6 +8,7 @@ let cachedDb = null
 let app = null
 
 async function connectToDatabase() {
+  // Return if already connected
   if (cachedDb && mongoose.connection.readyState === 1) {
     return cachedDb
   }
@@ -19,18 +20,26 @@ async function connectToDatabase() {
   try {
     mongoose.set('strictQuery', false)
     
+    // IMPORTANT: Set bufferCommands to true for serverless
     const opts = {
-      bufferCommands: false,
+      bufferCommands: true, // Enable buffering to prevent "before initial connection" errors
       maxPoolSize: 10,
       serverSelectionTimeoutMS: 10000,
       socketTimeoutMS: 45000,
     }
 
     cachedDb = await mongoose.connect(process.env.MONGODB_URI, opts)
+    
+    // Wait for connection to be fully ready
+    if (mongoose.connection.readyState !== 1) {
+      throw new Error('MongoDB connection not ready')
+    }
+    
     console.log('✅ MongoDB connected')
     return cachedDb
   } catch (error) {
     console.error('❌ MongoDB error:', error.message)
+    cachedDb = null
     throw error
   }
 }
