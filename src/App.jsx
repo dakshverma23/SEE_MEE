@@ -1,5 +1,5 @@
 import React, { useState } from 'react'
-import { BrowserRouter as Router, Routes, Route } from 'react-router-dom'
+import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom'
 import Navbar from './components/Navbar'
 import Hero from './components/Hero'
 import NewArrivals from './components/NewArrivals'
@@ -17,6 +17,8 @@ import AnarkaliPage from './pages/AnarkaliPage'
 import PalazzoPage from './pages/PalazzoPage'
 import StraightCutPage from './pages/StraightCutPage'
 import ShararaPage from './pages/ShararaPage'
+import AdminLogin from './pages/admin/AdminLogin'
+import AdminDashboard from './pages/admin/AdminDashboard'
 import { CartProvider } from './context/CartContext'
 import { AuthProvider } from './context/AuthContext'
 import './App.css'
@@ -63,6 +65,11 @@ function App() {
         <Router>
           <div className="app">
             <Routes>
+              {/* Admin Routes */}
+              <Route path="/admin" element={<Navigate to="/admin/login" replace />} />
+              <Route path="/admin/login" element={<AdminLogin />} />
+              <Route path="/admin/dashboard" element={<AdminDashboard />} />
+              
               {/* Auth Page */}
               <Route path="/auth" element={<Auth />} />
               
