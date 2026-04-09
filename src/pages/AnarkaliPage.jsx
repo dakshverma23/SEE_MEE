@@ -2,6 +2,7 @@ import { useState, useEffect, useContext } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { motion } from 'framer-motion'
 import { CartContext } from '../context/CartContext'
+import { getImageUrl } from '../utils/imageHelper'
 import './CategoryPages.css'
 
 const AnarkaliPage = () => {
