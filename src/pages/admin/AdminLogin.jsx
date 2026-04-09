@@ -15,24 +15,33 @@ const AdminLogin = () => {
     setLoading(true)
 
     try {
+      console.log('🔐 Attempting login to:', '/api/auth/login')
+      
       const response = await fetch('/api/auth/login', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(credentials)
       })
 
+      console.log('📡 Response status:', response.status)
+      
       const data = await response.json()
+      console.log('📦 Response data:', data)
+
+      if (!response.ok) {
+        throw new Error(data.message || data.error || `Server error: ${response.status}`)
+      }
 
       if (data.success && data.user && data.user.role === 'admin') {
         localStorage.setItem('adminToken', data.token)
         localStorage.setItem('adminUser', JSON.stringify(data.user))
         navigate('/admin/dashboard')
       } else {
-        setError('Invalid admin credentials')
+        setError(data.user?.role !== 'admin' ? 'Access denied. Admin privileges required.' : 'Invalid admin credentials')
       }
     } catch (err) {
-      console.error('Login error:', err)
-      setError('Login failed. Please try again.')
+      console.error('❌ Login error:', err)
+      setError(err.message || 'Login failed. Please try again.')
     } finally {
       setLoading(false)
     }
