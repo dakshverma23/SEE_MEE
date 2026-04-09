@@ -15,17 +15,29 @@ const AdminLogin = () => {
     setLoading(true)
 
     try {
+      console.log('Attempting login to:', '/api/auth/login')
+      
       const response = await fetch('/api/auth/login', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(credentials)
       })
 
-      if (!response.ok) {
-        throw new Error(`HTTP error! status: ${response.status}`)
-      }
+      console.log('Response status:', response.status)
+      console.log('Response headers:', response.headers)
 
-      const data = await response.json()
+      // Get the response text first to see what we're getting
+      const responseText = await response.text()
+      console.log('Response text:', responseText.substring(0, 200))
+
+      // Try to parse as JSON
+      let data
+      try {
+        data = JSON.parse(responseText)
+      } catch (parseError) {
+        console.error('JSON parse error:', parseError)
+        throw new Error(`Server returned non-JSON response: ${responseText.substring(0, 100)}`)
+      }
 
       if (data.success && data.user.role === 'admin') {
         localStorage.setItem('adminToken', data.token)
@@ -35,7 +47,8 @@ const AdminLogin = () => {
         setError('Invalid admin credentials')
       }
     } catch (err) {
-      setError('Login failed. Please try again.')
+      console.error('Login error:', err)
+      setError(`Login failed: ${err.message}`)
     } finally {
       setLoading(false)
     }

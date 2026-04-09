@@ -39,10 +39,12 @@ app.use('/api/orders', orderRoutes)
 app.use('/api/upload', uploadRoutes)
 app.use('/api/new-arrivals', newArrivalRoutes)
 
-// MongoDB Connection
-mongoose.connect(process.env.MONGODB_URI || 'mongodb://localhost:27017/seemee')
-  .then(() => console.log('✅ MongoDB Connected'))
-  .catch(err => console.error('❌ MongoDB Connection Error:', err))
+// MongoDB Connection (only for local development)
+if (process.env.NODE_ENV !== 'production' || !process.env.VERCEL) {
+  mongoose.connect(process.env.MONGODB_URI || 'mongodb://localhost:27017/seemee')
+    .then(() => console.log('✅ MongoDB Connected'))
+    .catch(err => console.error('❌ MongoDB Connection Error:', err))
+}
 
 // Error handling middleware
 app.use((err, req, res, next) => {
