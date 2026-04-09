@@ -5,6 +5,7 @@ import './AdminDashboard.css'
 import NewArrivalsManager from './components/NewArrivalsManager'
 import ProductsManager from './components/ProductsManager'
 import OrdersManager from './components/OrdersManager'
+import CollectionManager from './components/CollectionManager'
 
 const AdminDashboard = () => {
   const [activeTab, setActiveTab] = useState('overview')
@@ -18,9 +19,13 @@ const AdminDashboard = () => {
 
   useEffect(() => {
     const token = localStorage.getItem('adminToken')
+    console.log('Admin token:', token ? 'exists' : 'missing')
     if (!token) {
+      console.log('No token, redirecting to login')
       navigate('/admin/login')
+      return
     }
+    console.log('Token found, fetching stats')
     fetchStats()
   }, [navigate])
 
@@ -59,8 +64,8 @@ const AdminDashboard = () => {
   }
 
   return (
-    <div className="admin-dashboard">
-      <aside className="admin-sidebar">
+    <div className="admin-dashboard" style={{ minHeight: '100vh', background: '#f5f5f5' }}>
+      <aside className="admin-sidebar" style={{ background: '#2c3e50', color: 'white', minHeight: '100vh', width: '250px' }}>
         <div className="sidebar-header">
           <h2>See Mee</h2>
           <span>Admin Panel</span>
@@ -100,6 +105,19 @@ const AdminDashboard = () => {
               <path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"/>
             </svg>
             Products
+          </button>
+
+          <button 
+            className={activeTab === 'collection' ? 'active' : ''}
+            onClick={() => setActiveTab('collection')}
+          >
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor">
+              <rect x="3" y="3" width="7" height="7"/>
+              <rect x="14" y="3" width="7" height="7"/>
+              <rect x="14" y="14" width="7" height="7"/>
+              <rect x="3" y="14" width="7" height="7"/>
+            </svg>
+            Collection
           </button>
 
           <button 
@@ -197,6 +215,7 @@ const AdminDashboard = () => {
 
         {activeTab === 'new-arrivals' && <NewArrivalsManager />}
         {activeTab === 'products' && <ProductsManager />}
+        {activeTab === 'collection' && <CollectionManager />}
         {activeTab === 'orders' && <OrdersManager />}
       </main>
     </div>

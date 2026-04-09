@@ -23,9 +23,9 @@ const AdminLogin = () => {
 
       const data = await response.json()
 
-      if (data.success && data.data.role === 'admin') {
-        localStorage.setItem('adminToken', data.data.token)
-        localStorage.setItem('adminUser', JSON.stringify(data.data))
+      if (data.success && data.user && data.user.role === 'admin') {
+        localStorage.setItem('adminToken', data.token)
+        localStorage.setItem('adminUser', JSON.stringify(data.user))
         navigate('/admin/dashboard')
       } else {
         setError('Invalid admin credentials')

@@ -21,10 +21,10 @@ const productSchema = new mongoose.Schema({
     min: 0
   },
   images: [{
-    type: mongoose.Schema.Types.Mixed  // Can be string (old format) or object (new format with base64)
+    type: String  // Cloudinary URLs
   }],
   video: {
-    type: mongoose.Schema.Types.Mixed  // Can be string (old format) or object (new format with base64)
+    type: String  // Cloudinary URL
   },
   stock: {
     type: Number,
