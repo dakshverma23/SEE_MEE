@@ -74,7 +74,7 @@ export const AuthProvider = ({ children }) => {
 
       setUser(data.user)
       setToken(data.token)
-      return { success: true }
+      return { success: true, user: data.user, token: data.token }
     } catch (error) {
       console.error('Login error:', error)
       return { success: false, error: error.message }
@@ -99,7 +99,7 @@ export const AuthProvider = ({ children }) => {
 
       setUser(data.user)
       setToken(data.token)
-      return { success: true }
+      return { success: true, user: data.user, token: data.token }
     } catch (error) {
       console.error('Signup error:', error)
       return { success: false, error: error.message }

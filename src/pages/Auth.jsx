@@ -46,7 +46,16 @@ const Auth = () => {
       }
 
       if (result.success) {
-        navigate('/')
+        // Check if user is admin and redirect accordingly
+        if (result.user && result.user.role === 'admin') {
+          // Store admin credentials
+          localStorage.setItem('adminToken', result.token)
+          localStorage.setItem('adminUser', JSON.stringify(result.user))
+          navigate('/admin/dashboard')
+        } else {
+          // Regular user goes to home
+          navigate('/')
+        }
       } else {
         setError(result.error || 'Authentication failed')
       }
