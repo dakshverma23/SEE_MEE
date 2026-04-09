@@ -2,6 +2,7 @@ import { useState, useEffect, useContext } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { motion } from 'framer-motion'
 import { CartContext } from '../context/CartContext'
+import { getImageUrl } from '../utils/imageHelper'
 import './CategoryPages.css'
 
 const ShararaPage = () => {
@@ -72,7 +73,7 @@ const ShararaPage = () => {
               >
                 <div className="product-image-container">
                   <img 
-                    src={product.images?.[0] || '/images/placeholder.jpg'}
+                    src={getImageUrl(product.images?.[0])}
                     alt={product.name}
                     className="product-image"
                   />

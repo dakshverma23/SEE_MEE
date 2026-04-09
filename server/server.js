@@ -29,6 +29,10 @@ app.use('/uploads', express.static(path.join(__dirname, '../public/images')))
 app.use('/videos', express.static(path.join(__dirname, '../public/videos')))
 
 // Routes
+app.get('/api/health', (req, res) => {
+  res.json({ success: true, message: 'Server is running', timestamp: new Date().toISOString() })
+})
+
 app.use('/api/auth', authRoutes)
 app.use('/api/products', productRoutes)
 app.use('/api/orders', orderRoutes)
@@ -52,6 +56,12 @@ app.use((err, req, res, next) => {
 
 const PORT = process.env.PORT || 5000
 
-app.listen(PORT, () => {
-  console.log(`🚀 Server running on port ${PORT}`)
-})
+// For Vercel serverless, export the app
+export default app
+
+// Only listen if not in serverless environment
+if (process.env.NODE_ENV !== 'production' || !process.env.VERCEL) {
+  app.listen(PORT, () => {
+    console.log(`🚀 Server running on port ${PORT}`)
+  })
+}

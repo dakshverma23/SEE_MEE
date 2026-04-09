@@ -21,11 +21,20 @@ const productSchema = new mongoose.Schema({
     min: 0
   },
   images: [{
-    type: String,
-    required: true
+    data: {
+      type: String,  // base64 encoded image data
+      required: true
+    },
+    contentType: {
+      type: String,
+      required: true
+    },
+    filename: String
   }],
   video: {
-    type: String
+    data: String,  // base64 encoded video data
+    contentType: String,
+    filename: String
   },
   stock: {
     type: Number,

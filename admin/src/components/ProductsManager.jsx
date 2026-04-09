@@ -1,5 +1,6 @@
 import { useState, useEffect } from 'react'
 import { motion } from 'framer-motion'
+import { getImageUrl } from '../utils/imageHelper'
 import './ProductsManager.css'
 
 const ProductsManager = () => {
@@ -107,14 +108,19 @@ const ProductsManager = () => {
       console.log('Upload response:', data) // Debug log
       
       if (data.success) {
-        const imageUrls = data.data.map(img => img.url || img.path)
-        console.log('Image URLs:', imageUrls) // Debug log
+        // Store the complete image objects with base64 data
+        const imageObjects = data.data.map(img => ({
+          data: img.data,
+          contentType: img.contentType,
+          filename: img.filename
+        }))
+        console.log('Image objects:', imageObjects) // Debug log
         
         setFormData(prev => ({
           ...prev,
-          images: imageUrls
+          images: imageObjects
         }))
-        alert(`${imageUrls.length} image(s) uploaded successfully!`)
+        alert(`${imageObjects.length} image(s) uploaded successfully!`)
       } else {
         alert('Failed to upload images: ' + (data.message || 'Unknown error'))
       }
@@ -147,7 +153,15 @@ const ProductsManager = () => {
 
       const data = await response.json()
       if (data.success) {
-        setFormData(prev => ({ ...prev, video: data.data.url || data.data.path }))
+        // Store the complete video object with base64 data
+        setFormData(prev => ({ 
+          ...prev, 
+          video: {
+            data: data.data.data,
+            contentType: data.data.contentType,
+            filename: data.data.filename
+          }
+        }))
       }
     } catch (error) {
       alert('Failed to upload video')
@@ -332,7 +346,7 @@ const ProductsManager = () => {
                 {collectionNotifications.slice(0, 5).map((product) => (
                   <div key={product._id} className="notification-product-item">
                     <img 
-                      src={product.images?.[0] || '/placeholder.jpg'} 
+                      src={getImageUrl(product.images?.[0])} 
                       alt={product.name}
                       className="notification-product-thumb"
                     />
@@ -484,7 +498,7 @@ const ProductsManager = () => {
                 <div className="uploaded-images">
                   {formData.images.map((img, idx) => (
                     <div key={idx} className="thumb">
-                      <img src={img} alt="" />
+                      <img src={getImageUrl(img)} alt="" />
                     </div>
                   ))}
                 </div>
@@ -573,7 +587,7 @@ const ProductsManager = () => {
             >
               <div className="product-image">
                 {product.images && product.images.length > 0 && product.images[0] ? (
-                  <img src={product.images[0]} alt={product.name} />
+                  <img src={getImageUrl(product.images[0])} alt={product.name} />
                 ) : (
                   <div className="no-image">No Image</div>
                 )}

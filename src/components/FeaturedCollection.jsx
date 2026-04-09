@@ -3,6 +3,7 @@ import { motion, AnimatePresence } from 'framer-motion'
 import { CartContext } from '../context/CartContext'
 import gsap from 'gsap'
 import { ScrollTrigger } from 'gsap/ScrollTrigger'
+import { getImageUrl } from '../utils/imageHelper'
 import './FeaturedCollection.css'
 
 gsap.registerPlugin(ScrollTrigger)
@@ -226,7 +227,7 @@ const FeaturedCollection = () => {
                         
                         <div className="card-image-container">
                           <motion.img 
-                            src={product.images && product.images[0] ? product.images[0] : '/images/placeholder.jpg'}
+                            src={getImageUrl(product.images && product.images[0])}
                             alt={product.name}
                             className="product-img"
                             whileHover={{ scale: 1.08 }}

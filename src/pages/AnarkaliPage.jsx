@@ -72,7 +72,7 @@ const AnarkaliPage = () => {
               >
                 <div className="product-image-container">
                   <img 
-                    src={product.images?.[0] || '/images/placeholder.jpg'}
+                    src={getImageUrl(product.images?.[0])}
                     alt={product.name}
                     className="product-image"
                   />

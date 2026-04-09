@@ -1,49 +1,14 @@
 import express from 'express'
 import multer from 'multer'
-import path from 'path'
-import { fileURLToPath } from 'url'
-import fs from 'fs'
 import { protect, admin } from '../middleware/auth.js'
 
 const router = express.Router()
 
-const __filename = fileURLToPath(import.meta.url)
-const __dirname = path.dirname(__filename)
-
-// Ensure upload directories exist
-const imagesDir = path.join(__dirname, '../../public/images')
-const videosDir = path.join(__dirname, '../../public/videos')
-
-if (!fs.existsSync(imagesDir)) {
-  fs.mkdirSync(imagesDir, { recursive: true })
-}
-if (!fs.existsSync(videosDir)) {
-  fs.mkdirSync(videosDir, { recursive: true })
-}
-
-// Configure multer for local storage
-const imageStorage = multer.diskStorage({
-  destination: (req, file, cb) => {
-    cb(null, imagesDir)
-  },
-  filename: (req, file, cb) => {
-    const uniqueSuffix = Date.now() + '-' + Math.round(Math.random() * 1E9)
-    cb(null, 'product-' + uniqueSuffix + path.extname(file.originalname))
-  }
-})
-
-const videoStorage = multer.diskStorage({
-  destination: (req, file, cb) => {
-    cb(null, videosDir)
-  },
-  filename: (req, file, cb) => {
-    const uniqueSuffix = Date.now() + '-' + Math.round(Math.random() * 1E9)
-    cb(null, 'video-' + uniqueSuffix + path.extname(file.originalname))
-  }
-})
+// Configure multer for memory storage (base64 conversion)
+const storage = multer.memoryStorage()
 
 const imageUpload = multer({
-  storage: imageStorage,
+  storage: storage,
   limits: {
     fileSize: 10 * 1024 * 1024 // 10MB
   },
@@ -57,9 +22,9 @@ const imageUpload = multer({
 })
 
 const videoUpload = multer({
-  storage: videoStorage,
+  storage: storage,
   limits: {
-    fileSize: 100 * 1024 * 1024 // 100MB for videos
+    fileSize: 50 * 1024 * 1024 // 50MB for videos (reduced for MongoDB)
   },
   fileFilter: (req, file, cb) => {
     if (file.mimetype.startsWith('video/')) {
@@ -70,21 +35,25 @@ const videoUpload = multer({
   }
 })
 
-// Upload single image
+// Upload single image (returns base64)
 router.post('/image', protect, admin, imageUpload.single('image'), (req, res) => {
   try {
     if (!req.file) {
       return res.status(400).json({ success: false, message: 'No file uploaded' })
     }
 
-    const url = `/images/${req.file.filename}`
+    // Convert buffer to base64
+    const base64Data = req.file.buffer.toString('base64')
+    const dataUrl = `data:${req.file.mimetype};base64,${base64Data}`
     
     res.json({
       success: true,
       data: {
-        url,
-        path: url,
-        filename: req.file.filename
+        data: base64Data,
+        dataUrl: dataUrl,
+        contentType: req.file.mimetype,
+        filename: req.file.originalname,
+        size: req.file.size
       }
     })
   } catch (error) {
@@ -93,18 +62,25 @@ router.post('/image', protect, admin, imageUpload.single('image'), (req, res) =>
   }
 })
 
-// Upload multiple images
+// Upload multiple images (returns base64 array)
 router.post('/images', protect, admin, imageUpload.array('images', 10), (req, res) => {
   try {
     if (!req.files || req.files.length === 0) {
       return res.status(400).json({ success: false, message: 'No files uploaded' })
     }
 
-    const results = req.files.map(file => ({
-      url: `/images/${file.filename}`,
-      path: `/images/${file.filename}`,
-      filename: file.filename
-    }))
+    const results = req.files.map(file => {
+      const base64Data = file.buffer.toString('base64')
+      const dataUrl = `data:${file.mimetype};base64,${base64Data}`
+      
+      return {
+        data: base64Data,
+        dataUrl: dataUrl,
+        contentType: file.mimetype,
+        filename: file.originalname,
+        size: file.size
+      }
+    })
 
     res.json({
       success: true,
@@ -116,67 +92,29 @@ router.post('/images', protect, admin, imageUpload.array('images', 10), (req, re
   }
 })
 
-// Upload video
+// Upload video (returns base64)
 router.post('/video', protect, admin, videoUpload.single('video'), (req, res) => {
   try {
     if (!req.file) {
       return res.status(400).json({ success: false, message: 'No file uploaded' })
     }
 
-    const url = `/videos/${req.file.filename}`
+    // Convert buffer to base64
+    const base64Data = req.file.buffer.toString('base64')
+    const dataUrl = `data:${req.file.mimetype};base64,${base64Data}`
     
     res.json({
       success: true,
       data: {
-        url,
-        path: url,
-        filename: req.file.filename
+        data: base64Data,
+        dataUrl: dataUrl,
+        contentType: req.file.mimetype,
+        filename: req.file.originalname,
+        size: req.file.size
       }
     })
   } catch (error) {
     console.error('Video upload error:', error)
-    res.status(500).json({ success: false, message: error.message })
-  }
-})
-
-// Delete image
-router.delete('/image/:filename', protect, admin, (req, res) => {
-  try {
-    const filename = req.params.filename
-    const filePath = path.join(imagesDir, filename)
-    
-    if (fs.existsSync(filePath)) {
-      fs.unlinkSync(filePath)
-      res.json({
-        success: true,
-        message: 'Image deleted successfully'
-      })
-    } else {
-      res.status(404).json({ success: false, message: 'File not found' })
-    }
-  } catch (error) {
-    console.error('Image deletion error:', error)
-    res.status(500).json({ success: false, message: error.message })
-  }
-})
-
-// Delete video
-router.delete('/video/:filename', protect, admin, (req, res) => {
-  try {
-    const filename = req.params.filename
-    const filePath = path.join(videosDir, filename)
-    
-    if (fs.existsSync(filePath)) {
-      fs.unlinkSync(filePath)
-      res.json({
-        success: true,
-        message: 'Video deleted successfully'
-      })
-    } else {
-      res.status(404).json({ success: false, message: 'File not found' })
-    }
-  } catch (error) {
-    console.error('Video deletion error:', error)
     res.status(500).json({ success: false, message: error.message })
   }
 })
