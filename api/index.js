@@ -2,7 +2,6 @@
 import mongoose from 'mongoose'
 import express from 'express'
 import cors from 'cors'
-import dotenv from 'dotenv'
 
 // Import routes
 import authRoutes from '../server/routes/auth.js'
@@ -11,47 +10,36 @@ import orderRoutes from '../server/routes/orders.js'
 import uploadRoutes from '../server/routes/upload.js'
 import newArrivalRoutes from '../server/routes/newArrivals.js'
 
-dotenv.config()
+// MongoDB connection cache
+let cachedDb = null
 
-// MongoDB connection for serverless with caching
-let isConnected = false
-
-const connectDB = async () => {
-  // Use cached connection if available
-  if (isConnected && mongoose.connection.readyState === 1) {
-    console.log('✅ Using cached MongoDB connection')
-    return
+async function connectToDatabase() {
+  if (cachedDb && mongoose.connection.readyState === 1) {
+    console.log('Using cached database connection')
+    return cachedDb
   }
 
-  // Check if MONGODB_URI exists
   if (!process.env.MONGODB_URI) {
-    throw new Error('MONGODB_URI environment variable is not defined')
+    throw new Error('MONGODB_URI is not defined')
   }
 
   try {
-    // Set mongoose options globally
     mongoose.set('strictQuery', false)
     
-    // Disconnect if in connecting/disconnecting state
-    if (mongoose.connection.readyState === 2 || mongoose.connection.readyState === 3) {
-      await mongoose.disconnect()
+    const opts = {
+      bufferCommands: false,
+      maxPoolSize: 10,
+      serverSelectionTimeoutMS: 10000,
+      socketTimeoutMS: 45000,
     }
 
-    // Only connect if not already connected
-    if (mongoose.connection.readyState !== 1) {
-      await mongoose.connect(process.env.MONGODB_URI, {
-        bufferCommands: false,
-        serverSelectionTimeoutMS: 10000,
-        socketTimeoutMS: 45000,
-      })
-      
-      isConnected = true
-      console.log('✅ MongoDB Connected (Serverless)')
-    }
+    const db = await mongoose.connect(process.env.MONGODB_URI, opts)
+    cachedDb = db
+    console.log('New database connection established')
+    return db
   } catch (error) {
-    console.error('❌ MongoDB Connection Error:', error.message)
-    isConnected = false
-    throw new Error(`MongoDB connection failed: ${error.message}`)
+    console.error('Database connection error:', error)
+    throw error
   }
 }
 
@@ -59,7 +47,13 @@ const connectDB = async () => {
 const app = express()
 
 // Middleware
-app.use(cors())
+app.use(cors({
+  origin: '*',
+  credentials: true,
+  methods: ['GET', 'POST', 'PUT', 'DELETE', 'PATCH', 'OPTIONS'],
+  allowedHeaders: ['Content-Type', 'Authorization']
+}))
+
 app.use(express.json({ limit: '50mb' }))
 app.use(express.urlencoded({ extended: true, limit: '50mb' }))
 
@@ -69,7 +63,11 @@ app.get('/api/health', (req, res) => {
     success: true, 
     message: 'Server is running', 
     timestamp: new Date().toISOString(),
-    mongodb: mongoose.connection.readyState === 1 ? 'connected' : 'disconnected'
+    mongodb: mongoose.connection.readyState === 1 ? 'connected' : 'disconnected',
+    env: {
+      hasMongoUri: !!process.env.MONGODB_URI,
+      hasJwtSecret: !!process.env.JWT_SECRET
+    }
   })
 })
 
@@ -80,79 +78,38 @@ app.use('/api/orders', orderRoutes)
 app.use('/api/upload', uploadRoutes)
 app.use('/api/new-arrivals', newArrivalRoutes)
 
-// Catch-all for undefined API routes
+// Catch-all for undefined routes
 app.use('/api/*', (req, res) => {
   res.status(404).json({
     success: false,
-    message: `API route not found: ${req.method} ${req.originalUrl}`
+    message: `Route not found: ${req.method} ${req.originalUrl}`
   })
 })
 
-// Error handling
+// Global error handler
 app.use((err, req, res, next) => {
-  console.error('Error:', err)
-  res.status(500).json({ 
+  console.error('Express error:', err)
+  res.status(err.status || 500).json({ 
     success: false, 
-    message: 'Something went wrong!',
-    error: process.env.NODE_ENV === 'development' ? err.message : 'Internal server error'
+    message: err.message || 'Internal server error',
+    error: process.env.NODE_ENV === 'production' ? undefined : err.stack
   })
 })
 
-// Export handler for Vercel
+// Vercel serverless handler
 export default async function handler(req, res) {
-  // Set CORS headers
-  res.setHeader('Access-Control-Allow-Credentials', 'true')
-  res.setHeader('Access-Control-Allow-Origin', '*')
-  res.setHeader('Access-Control-Allow-Methods', 'GET,OPTIONS,PATCH,DELETE,POST,PUT')
-  res.setHeader('Access-Control-Allow-Headers', 'X-CSRF-Token, X-Requested-With, Accept, Accept-Version, Content-Length, Content-MD5, Content-Type, Date, X-Api-Version, Authorization')
-  
-  // Handle preflight
-  if (req.method === 'OPTIONS') {
-    res.status(200).end()
-    return
-  }
-
-  // Set JSON content type
-  res.setHeader('Content-Type', 'application/json')
-  
   try {
-    // Check if environment variables are set
-    if (!process.env.MONGODB_URI) {
-      console.error('❌ MONGODB_URI not set')
-      return res.status(500).json({ 
-        success: false, 
-        message: 'Server configuration error: MONGODB_URI not set',
-        hint: 'Please set environment variables in Vercel dashboard'
-      })
-    }
-
-    if (!process.env.JWT_SECRET) {
-      console.error('❌ JWT_SECRET not set')
-      return res.status(500).json({ 
-        success: false, 
-        message: 'Server configuration error: JWT_SECRET not set',
-        hint: 'Please set environment variables in Vercel dashboard'
-      })
-    }
-
-    // Connect to MongoDB
-    await connectDB()
+    // Connect to database
+    await connectToDatabase()
     
-    // Handle the request with Express
+    // Pass request to Express
     return app(req, res)
   } catch (error) {
-    console.error('❌ Serverless function error:', error.message)
-    
-    // Return proper JSON error
-    return res.status(500).json({ 
-      success: false, 
+    console.error('Handler error:', error)
+    return res.status(500).json({
+      success: false,
       message: 'Server error',
-      error: error.message,
-      hint: error.message.includes('MONGODB_URI') 
-        ? 'Check environment variables in Vercel dashboard'
-        : error.message.includes('connection')
-        ? 'Check MongoDB Atlas IP whitelist (allow 0.0.0.0/0)'
-        : 'Check Vercel function logs for details'
+      error: error.message
     })
   }
 }
