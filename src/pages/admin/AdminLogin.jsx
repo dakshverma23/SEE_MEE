@@ -35,7 +35,16 @@ const AdminLogin = () => {
       if (data.success && data.user && data.user.role === 'admin') {
         localStorage.setItem('adminToken', data.token)
         localStorage.setItem('adminUser', JSON.stringify(data.user))
-        navigate('/admin/dashboard')
+        
+        // Open admin panel in new tab
+        window.open('/admin/dashboard', '_blank')
+        
+        // Show success message and stay on login page
+        setError('')
+        alert('✅ Admin panel opened in new tab!')
+        
+        // Clear form
+        setCredentials({ email: '', password: '' })
       } else {
         setError(data.user?.role !== 'admin' ? 'Access denied. Admin privileges required.' : 'Invalid admin credentials')
       }
