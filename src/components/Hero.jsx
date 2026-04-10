@@ -109,7 +109,7 @@ const Hero = () => {
                 <motion.img 
                   src={`/images/${item.img}`} 
                   alt="Featured"
-                  animate={{ scale: [1, 1.05] }}
+                  animate={{ scale: [1, 1.01] }}
                   transition={{
                     duration: 4,
                     ease: "easeInOut",
