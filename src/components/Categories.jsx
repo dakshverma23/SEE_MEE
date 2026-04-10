@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react'
+import { useState, useEffect } from 'react'
 import './Categories.css'
 
 const Fabrics = () => {
@@ -39,7 +39,12 @@ const Fabrics = () => {
       .then(res => res.json())
       .then(data => {
         if (data.success && data.data.fabrics && data.data.fabrics.length > 0) {
-          setFabrics(data.data.fabrics.sort((a, b) => a.order - b.order))
+          // Ensure each fabric has a unique ID
+          const fabricsWithIds = data.data.fabrics.map((fabric, idx) => ({
+            ...fabric,
+            id: fabric._id || fabric.id || `fabric-${idx}`
+          }))
+          setFabrics(fabricsWithIds.sort((a, b) => a.order - b.order))
         }
       })
       .catch(err => console.error('Error fetching fabrics:', err))
