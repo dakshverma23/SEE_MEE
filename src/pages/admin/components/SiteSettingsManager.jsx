@@ -115,6 +115,25 @@ const SiteSettingsManager = () => {
     setEditingFabric(null)
   }
 
+  const handleAddFabric = async () => {
+    const newFabric = {
+      title: 'New Fabric',
+      description: 'Description of the fabric',
+      image: '/images/silk.jpg',
+      order: settings.fabrics.length
+    }
+    const updatedFabrics = [...settings.fabrics, newFabric]
+    await updateSettings({ ...settings, fabrics: updatedFabrics })
+  }
+
+  const handleDeleteFabric = async (index) => {
+    if (!confirm('Are you sure you want to delete this fabric?')) return
+    const updatedFabrics = settings.fabrics.filter((_, i) => i !== index)
+    // Reorder remaining fabrics
+    updatedFabrics.forEach((fabric, i) => fabric.order = i)
+    await updateSettings({ ...settings, fabrics: updatedFabrics })
+  }
+
   const handleCategoryImageUpload = async (index, file) => {
     if (!file) return
     setUploading(true)
@@ -136,6 +155,46 @@ const SiteSettingsManager = () => {
     updatedCategories[index] = updatedCategory
     await updateSettings({ ...settings, categorySlides: updatedCategories })
     setEditingCategory(null)
+  }
+
+  const handleAddCategory = async () => {
+    const newCategory = {
+      title: 'New Category',
+      slug: 'new-category',
+      subtitle: 'Subtitle',
+      description: 'Description of the category',
+      features: ['Feature 1', 'Feature 2', 'Feature 3'],
+      image: '/images/categories_anarkali.jpg',
+      order: settings.categorySlides.length
+    }
+    const updatedCategories = [...settings.categorySlides, newCategory]
+    await updateSettings({ ...settings, categorySlides: updatedCategories })
+  }
+
+  const handleDeleteCategory = async (index) => {
+    if (!confirm('Are you sure you want to delete this category slide?')) return
+    const updatedCategories = settings.categorySlides.filter((_, i) => i !== index)
+    // Reorder remaining categories
+    updatedCategories.forEach((cat, i) => cat.order = i)
+    await updateSettings({ ...settings, categorySlides: updatedCategories })
+  }
+
+  const handleAddFeature = (index) => {
+    const updated = [...settings.categorySlides]
+    updated[index].features.push('New Feature')
+    setSettings({ ...settings, categorySlides: updated })
+  }
+
+  const handleRemoveFeature = (categoryIndex, featureIndex) => {
+    const updated = [...settings.categorySlides]
+    updated[categoryIndex].features = updated[categoryIndex].features.filter((_, i) => i !== featureIndex)
+    setSettings({ ...settings, categorySlides: updated })
+  }
+
+  const handleFeatureChange = (categoryIndex, featureIndex, value) => {
+    const updated = [...settings.categorySlides]
+    updated[categoryIndex].features[featureIndex] = value
+    setSettings({ ...settings, categorySlides: updated })
   }
 
   if (loading) {
@@ -243,8 +302,19 @@ const SiteSettingsManager = () => {
 
         {activeTab === 'fabrics' && (
           <div className="fabrics-section">
-            <h2>Fabrics Section</h2>
-            <p>Manage the 4 fabric types displayed on your website</p>
+            <div className="section-header-with-action">
+              <div>
+                <h2>Fabrics Section</h2>
+                <p>Manage fabric types displayed on your website</p>
+              </div>
+              <button className="add-btn" onClick={handleAddFabric}>
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                  <line x1="12" y1="5" x2="12" y2="19"/>
+                  <line x1="5" y1="12" x2="19" y2="12"/>
+                </svg>
+                Add Fabric
+              </button>
+            </div>
             
             <div className="items-grid">
               {settings.fabrics.map((fabric, index) => (
@@ -257,12 +327,20 @@ const SiteSettingsManager = () => {
                 >
                   <div className="card-header">
                     <h3>{fabric.title}</h3>
-                    <button 
-                      className="edit-btn"
-                      onClick={() => setEditingFabric(index)}
-                    >
-                      Edit
-                    </button>
+                    <div className="card-actions">
+                      <button 
+                        className="edit-btn"
+                        onClick={() => setEditingFabric(index)}
+                      >
+                        Edit
+                      </button>
+                      <button 
+                        className="delete-btn"
+                        onClick={() => handleDeleteFabric(index)}
+                      >
+                        Delete
+                      </button>
+                    </div>
                   </div>
 
                   <div className="image-preview">
@@ -327,8 +405,19 @@ const SiteSettingsManager = () => {
 
         {activeTab === 'categories' && (
           <div className="categories-section">
-            <h2>Category Slides</h2>
-            <p>Manage the 4 category slides in the slider section</p>
+            <div className="section-header-with-action">
+              <div>
+                <h2>Category Slides</h2>
+                <p>Manage category slides in the slider section</p>
+              </div>
+              <button className="add-btn" onClick={handleAddCategory}>
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                  <line x1="12" y1="5" x2="12" y2="19"/>
+                  <line x1="5" y1="12" x2="19" y2="12"/>
+                </svg>
+                Add Category Slide
+              </button>
+            </div>
             
             <div className="items-grid">
               {settings.categorySlides.map((category, index) => (
@@ -341,12 +430,20 @@ const SiteSettingsManager = () => {
                 >
                   <div className="card-header">
                     <h3>{category.title}</h3>
-                    <button 
-                      className="edit-btn"
-                      onClick={() => setEditingCategory(index)}
-                    >
-                      Edit
-                    </button>
+                    <div className="card-actions">
+                      <button 
+                        className="edit-btn"
+                        onClick={() => setEditingCategory(index)}
+                      >
+                        Edit
+                      </button>
+                      <button 
+                        className="delete-btn"
+                        onClick={() => handleDeleteCategory(index)}
+                      >
+                        Delete
+                      </button>
+                    </div>
                   </div>
 
                   <div className="image-preview">
@@ -390,6 +487,16 @@ const SiteSettingsManager = () => {
                         />
                         <input
                           type="text"
+                          value={category.slug}
+                          onChange={(e) => {
+                            const updated = [...settings.categorySlides]
+                            updated[index].slug = e.target.value
+                            setSettings({ ...settings, categorySlides: updated })
+                          }}
+                          placeholder="Slug (e.g., anarkali)"
+                        />
+                        <input
+                          type="text"
                           value={category.subtitle}
                           onChange={(e) => {
                             const updated = [...settings.categorySlides]
@@ -408,6 +515,35 @@ const SiteSettingsManager = () => {
                           placeholder="Description"
                           rows="4"
                         />
+                        
+                        <div className="features-editor">
+                          <label>Features:</label>
+                          {category.features.map((feature, featureIdx) => (
+                            <div key={featureIdx} className="feature-input-group">
+                              <input
+                                type="text"
+                                value={feature}
+                                onChange={(e) => handleFeatureChange(index, featureIdx, e.target.value)}
+                                placeholder={`Feature ${featureIdx + 1}`}
+                              />
+                              <button 
+                                className="remove-feature-btn"
+                                onClick={() => handleRemoveFeature(index, featureIdx)}
+                                type="button"
+                              >
+                                ×
+                              </button>
+                            </div>
+                          ))}
+                          <button 
+                            className="add-feature-btn"
+                            onClick={() => handleAddFeature(index)}
+                            type="button"
+                          >
+                            + Add Feature
+                          </button>
+                        </div>
+
                         <div className="modal-actions">
                           <button onClick={() => handleCategoryUpdate(index, category)}>
                             Save

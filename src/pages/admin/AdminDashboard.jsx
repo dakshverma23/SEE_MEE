@@ -67,8 +67,8 @@ const AdminDashboard = () => {
   }
 
   return (
-    <div className="admin-dashboard" style={{ minHeight: '100vh', background: '#f5f5f5' }}>
-      <aside className="admin-sidebar" style={{ background: '#2c3e50', color: 'white', minHeight: '100vh', width: '250px' }}>
+    <div className="admin-dashboard">
+      <aside className="admin-sidebar">
         <div className="sidebar-header">
           <h2>See Mee</h2>
           <span>Admin Panel</span>
