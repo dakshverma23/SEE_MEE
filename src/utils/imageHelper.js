@@ -1,18 +1,93 @@
-// Helper function to get image URL from product image data
-export const getImageUrl = (imageData) => {
+// Helper function to get optimized image URL from Cloudinary
+export const getImageUrl = (imageData, options = {}) => {
   if (!imageData) return '/images/categories_anarkali.jpg'
   
-  // If it's a string URL (Cloudinary or old format), return it directly
+  // If it's a string URL
   if (typeof imageData === 'string') {
+    // Check if it's a Cloudinary URL
+    if (imageData.includes('cloudinary.com')) {
+      return optimizeCloudinaryUrl(imageData, options)
+    }
     return imageData
   }
   
-  // If it's an object with base64 data (legacy format), convert to data URL
+  // If it's an object with base64 data (legacy format)
   if (imageData.data && imageData.contentType) {
     return `data:${imageData.contentType};base64,${imageData.data}`
   }
   
   return '/images/categories_anarkali.jpg'
+}
+
+// Optimize Cloudinary URLs with transformations
+const optimizeCloudinaryUrl = (url, options = {}) => {
+  // Default options for optimization
+  const {
+    width = 'auto',
+    quality = 'auto:good',
+    format = 'auto',
+    crop = 'scale',
+    fetchFormat = 'auto'
+  } = options
+
+  // Check if URL already has transformations
+  if (url.includes('/upload/')) {
+    // Insert transformations after /upload/
+    const transformations = [
+      `w_${width}`,
+      `q_${quality}`,
+      `f_${format}`,
+      `c_${crop}`,
+      'dpr_auto'
+    ].join(',')
+    
+    return url.replace('/upload/', `/upload/${transformations}/`)
+  }
+  
+  return url
+}
+
+// Specific optimization presets
+export const getOptimizedImageUrl = (imageData, preset = 'default') => {
+  const presets = {
+    // Hero/Carousel images - Large, high quality
+    hero: {
+      width: 1200,
+      quality: 'auto:good',
+      format: 'auto',
+      crop: 'fill'
+    },
+    // Product images - Medium size
+    product: {
+      width: 800,
+      quality: 'auto:good',
+      format: 'auto',
+      crop: 'fill'
+    },
+    // Thumbnails - Small, optimized
+    thumbnail: {
+      width: 400,
+      quality: 'auto:eco',
+      format: 'auto',
+      crop: 'fill'
+    },
+    // Category/Fabric circles
+    circle: {
+      width: 300,
+      quality: 'auto:good',
+      format: 'auto',
+      crop: 'fill'
+    },
+    // Default - Auto optimization
+    default: {
+      width: 'auto',
+      quality: 'auto:good',
+      format: 'auto',
+      crop: 'scale'
+    }
+  }
+
+  return getImageUrl(imageData, presets[preset] || presets.default)
 }
 
 // Helper function to get video URL from product video data

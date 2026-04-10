@@ -1,7 +1,7 @@
 import React, { useContext, useEffect, useState } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
 import { CartContext } from '../context/CartContext'
-import { getImageUrl } from '../utils/imageHelper'
+import { getOptimizedImageUrl } from '../utils/imageHelper'
 import './FeaturedCollection.css'
 
 const FeaturedCollection = () => {
@@ -192,7 +192,7 @@ const FeaturedCollection = () => {
                         
                         <div className="card-image-container">
                           <motion.img 
-                            src={getImageUrl(product.images && product.images[0])}
+                            src={getOptimizedImageUrl(product.images && product.images[0], 'product')}
                             alt={product.name}
                             className="product-img"
                             whileHover={{ scale: 1.08 }}
