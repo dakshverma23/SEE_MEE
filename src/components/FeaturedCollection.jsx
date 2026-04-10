@@ -183,6 +183,7 @@ const FeaturedCollection = () => {
                 onClick={() => paginate(-1)}
                 whileHover={{ scale: 1.1 }}
                 whileTap={{ scale: 0.9 }}
+                aria-label="Previous products"
               >
                 <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor">
                   <path d="M15 18l-6-6 6-6"/>
@@ -299,6 +300,7 @@ const FeaturedCollection = () => {
                 onClick={() => paginate(1)}
                 whileHover={{ scale: 1.1 }}
                 whileTap={{ scale: 0.9 }}
+                aria-label="Next products"
               >
                 <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor">
                   <path d="M9 18l6-6-6-6"/>
@@ -319,6 +321,7 @@ const FeaturedCollection = () => {
                     }}
                     whileHover={{ scale: 1.2 }}
                     whileTap={{ scale: 0.9 }}
+                    aria-label={`Go to slide ${index + 1}`}
                   />
                 ))}
               </div>

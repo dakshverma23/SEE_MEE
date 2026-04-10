@@ -1,0 +1,10 @@
+# See Mee - Robots.txt
+User-agent: *
+Allow: /
+
+# Disallow admin pages
+Disallow: /admin/
+Disallow: /api/
+
+# Sitemap
+Sitemap: https://see-mee-beta.vercel.app/sitemap.xml

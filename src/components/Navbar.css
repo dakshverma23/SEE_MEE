@@ -238,7 +238,7 @@
 
 .profile-email {
   color: var(--charcoal);
-  opacity: 0.6;
+  opacity: 0.75;
   font-size: 0.8rem;
   margin: 0;
   white-space: nowrap;

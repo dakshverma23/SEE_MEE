@@ -55,7 +55,7 @@
 .footer-logo .logo-tagline {
   font-size: 0.65rem;
   letter-spacing: 3px;
-  color: rgba(255, 255, 255, 0.7);
+  color: rgba(255, 255, 255, 0.85);
   text-transform: uppercase;
   margin-top: -3px;
   font-weight: 500;
@@ -151,7 +151,7 @@
 }
 
 .newsletter-form input::placeholder {
-  color: rgba(255, 255, 255, 0.6);
+  color: rgba(255, 255, 255, 0.75);
 }
 
 .newsletter-form input:focus {

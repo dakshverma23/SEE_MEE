@@ -171,6 +171,7 @@ const Magazine = () => {
                 onClick={() => goToSlide(index)}
                 whileHover={{ scale: 1.3 }}
                 whileTap={{ scale: 0.9 }}
+                aria-label={`Go to magazine story ${index + 1}`}
               />
             ))}
           </div>

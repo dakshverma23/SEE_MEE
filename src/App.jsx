@@ -33,13 +33,15 @@ function App() {
         onCartOpen={() => setIsCartOpen(true)} 
         onWishlistOpen={() => setIsWishlistOpen(true)}
       />
-      <Hero />
-      <NewArrivals />
-      <CategoriesSlider />
-      <Fabrics />
-      <FeaturedCollection />
-      <Magazine />
-      <About />
+      <main>
+        <Hero />
+        <NewArrivals />
+        <CategoriesSlider />
+        <Fabrics />
+        <FeaturedCollection />
+        <Magazine />
+        <About />
+      </main>
       <Footer />
       <Cart isOpen={isCartOpen} onClose={() => setIsCartOpen(false)} />
       <Wishlist isOpen={isWishlistOpen} onClose={() => setIsWishlistOpen(false)} />
@@ -52,7 +54,9 @@ function App() {
         onCartOpen={() => setIsCartOpen(true)} 
         onWishlistOpen={() => setIsWishlistOpen(true)}
       />
-      {children}
+      <main>
+        {children}
+      </main>
       <Footer />
       <Cart isOpen={isCartOpen} onClose={() => setIsCartOpen(false)} />
       <Wishlist isOpen={isWishlistOpen} onClose={() => setIsWishlistOpen(false)} />

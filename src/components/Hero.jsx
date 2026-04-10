@@ -103,14 +103,15 @@ const Hero = () => {
       {/* Top Left - Small Circular Thumbnails */}
       <div className="hero-thumbnails">
         {thumbnails.map((item, idx) => (
-          <div 
+          <button 
             key={idx} 
             className={`hero-thumb ${activeIndex === idx ? 'active' : ''}`}
             style={{ left: `${idx * 35}px` }}
             onClick={() => setActiveIndex(idx)}
+            aria-label={`View ${item.category} collection`}
           >
-            <img src={getImageUrl(item.img)} alt="" />
-          </div>
+            <img src={getImageUrl(item.img)} alt={item.category} />
+          </button>
         ))}
       </div>
 
@@ -154,7 +155,8 @@ const Hero = () => {
               <div className="carousel-image-container">
                 <motion.img 
                   src={getImageUrl(item.img)} 
-                  alt="Featured"
+                  alt={`${item.category} - ${item.desc}`}
+                  fetchpriority={position === 0 ? "high" : "auto"}
                   animate={{ scale: [1, 1.01] }}
                   transition={{
                     duration: 4,
