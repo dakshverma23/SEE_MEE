@@ -205,21 +205,47 @@ const CarouselManager = () => {
     try {
       const token = localStorage.getItem('adminToken')
       
+      let successCount = 0
+      let errorMessages = []
+
       for (const img of defaultImages) {
-        await fetch('/api/carousel', {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json',
-            'Authorization': `Bearer ${token}`
-          },
-          body: JSON.stringify(img)
-        })
+        try {
+          const response = await fetch('/api/carousel', {
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/json',
+              'Authorization': `Bearer ${token}`
+            },
+            body: JSON.stringify(img)
+          })
+
+          const data = await response.json()
+          
+          if (data.success) {
+            successCount++
+            console.log(`✅ Created carousel image ${img.order}: ${img.title}`)
+          } else {
+            errorMessages.push(`Order ${img.order} (${img.title}): ${data.message}`)
+            console.error(`❌ Failed to create order ${img.order}:`, data)
+          }
+        } catch (err) {
+          errorMessages.push(`Order ${img.order} (${img.title}): ${err.message}`)
+          console.error(`❌ Error creating order ${img.order}:`, err)
+        }
       }
       
-      fetchCarouselImages()
-      alert('✅ Default carousel images created successfully!')
+      await fetchCarouselImages()
+      
+      if (successCount === 5) {
+        alert(`✅ Success! Created all ${successCount} carousel images.`)
+      } else if (successCount > 0) {
+        alert(`⚠️ Partial success: Created ${successCount}/5 images.\n\nErrors:\n${errorMessages.join('\n')}\n\nCheck console for details.`)
+      } else {
+        alert(`❌ Failed to create carousel images.\n\nErrors:\n${errorMessages.join('\n')}\n\nMake sure the backend server is running!`)
+      }
     } catch (error) {
-      alert('Failed to seed carousel images')
+      console.error('Seed error:', error)
+      alert('Failed to seed carousel images: ' + error.message)
     } finally {
       setUploading(false)
     }
