@@ -156,25 +156,63 @@ const MagazineManager = () => {
       }
     ]
 
+    setUploading(true)
     try {
       const token = localStorage.getItem('adminToken')
       
+      if (!token) {
+        alert('❌ Not authenticated. Please login again.')
+        setUploading(false)
+        return
+      }
+
+      let successCount = 0
+      let errorMessages = []
+
       for (const mag of defaultMagazines) {
-        await fetch('/api/magazine', {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json',
-            'Authorization': `Bearer ${token}`
-          },
-          body: JSON.stringify(mag)
-        })
+        try {
+          const response = await fetch('/api/magazine', {
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/json',
+              'Authorization': `Bearer ${token}`
+            },
+            body: JSON.stringify(mag)
+          })
+
+          const data = await response.json()
+          
+          if (data.success) {
+            successCount++
+            console.log(`✅ Created: ${mag.title}`)
+          } else {
+            errorMessages.push(`${mag.title}: ${data.message}`)
+            console.error(`❌ Failed: ${mag.title}`, data)
+          }
+        } catch (err) {
+          errorMessages.push(`${mag.title}: ${err.message}`)
+          console.error(`❌ Error creating ${mag.title}:`, err)
+        }
       }
       
-      fetchMagazines()
-      alert('✅ Default magazines created successfully!')
+      await fetchMagazines()
+      
+      if (successCount === 4) {
+        alert(`✅ Success! Created ${successCount} magazine items.`)
+      } else if (successCount > 0) {
+        alert(`⚠️ Partial success: Created ${successCount}/4 magazines.\n\nErrors:\n${errorMessages.join('\n')}`)
+      } else {
+        alert(`❌ Failed to create magazines.\n\nErrors:\n${errorMessages.join('\n')}\n\nMake sure the backend server is running!`)
+      }
     } catch (error) {
       console.error('Seed error:', error)
-      alert('Failed to seed magazines. Make sure the server is running.')
+      if (error.message.includes('Failed to fetch')) {
+        alert('❌ SERVER NOT RUNNING!\n\nPlease start the backend server:\n\n1. Open terminal\n2. Run: cd server\n3. Run: npm start\n\nThen try again.')
+      } else {
+        alert('Failed to seed magazines: ' + error.message)
+      }
+    } finally {
+      setUploading(false)
     }
   }
 
@@ -198,8 +236,12 @@ const MagazineManager = () => {
         </div>
         <div className="header-actions">
           {magazines.length === 0 && (
-            <button className="seed-btn" onClick={seedDefaultMagazines}>
-              📚 Load Default Magazines
+            <button 
+              className="seed-btn" 
+              onClick={seedDefaultMagazines}
+              disabled={uploading}
+            >
+              {uploading ? '⏳ Creating...' : '📚 Load Default Magazines'}
             </button>
           )}
           <button className="add-btn" onClick={() => setShowForm(!showForm)}>

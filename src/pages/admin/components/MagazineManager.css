@@ -51,9 +51,15 @@
   gap: 0.5rem;
 }
 
-.seed-btn:hover {
+.seed-btn:hover:not(:disabled) {
   transform: translateY(-2px);
   box-shadow: 0 6px 18px rgba(76, 175, 80, 0.4);
+}
+
+.seed-btn:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+  transform: none;
 }
 
 .add-btn {
