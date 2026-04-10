@@ -1,6 +1,6 @@
 // Helper function to get image URL from product image data
 export const getImageUrl = (imageData) => {
-  if (!imageData) return '/images/placeholder.jpg'
+  if (!imageData) return '/images/categories_anarkali.jpg'
   
   // If it's a string URL (Cloudinary or old format), return it directly
   if (typeof imageData === 'string') {
@@ -12,7 +12,7 @@ export const getImageUrl = (imageData) => {
     return `data:${imageData.contentType};base64,${imageData.data}`
   }
   
-  return '/images/placeholder.jpg'
+  return '/images/categories_anarkali.jpg'
 }
 
 // Helper function to get video URL from product video data
