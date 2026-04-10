@@ -7,6 +7,7 @@ import ProductsManager from './components/ProductsManager'
 import OrdersManager from './components/OrdersManager'
 import CollectionManager from './components/CollectionManager'
 import MagazineManager from './components/MagazineManager'
+import CarouselManager from './components/CarouselManager'
 
 const AdminDashboard = () => {
   const [activeTab, setActiveTab] = useState('overview')
@@ -133,6 +134,17 @@ const AdminDashboard = () => {
           </button>
 
           <button 
+            className={activeTab === 'carousel' ? 'active' : ''}
+            onClick={() => setActiveTab('carousel')}
+          >
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor">
+              <rect x="2" y="7" width="20" height="15" rx="2" ry="2"/>
+              <polyline points="17 2 12 7 7 2"/>
+            </svg>
+            Hero Carousel
+          </button>
+
+          <button 
             className={activeTab === 'orders' ? 'active' : ''}
             onClick={() => setActiveTab('orders')}
           >
@@ -229,6 +241,7 @@ const AdminDashboard = () => {
         {activeTab === 'products' && <ProductsManager />}
         {activeTab === 'collection' && <CollectionManager />}
         {activeTab === 'magazine' && <MagazineManager />}
+        {activeTab === 'carousel' && <CarouselManager />}
         {activeTab === 'orders' && <OrdersManager />}
       </main>
     </div>

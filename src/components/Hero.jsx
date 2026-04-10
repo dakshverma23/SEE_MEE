@@ -1,17 +1,51 @@
 import { useState, useEffect } from 'react'
 import { motion } from 'framer-motion'
+import { getImageUrl } from '../utils/imageHelper'
 import './Hero.css'
 
 const Hero = () => {
-  const thumbnails = [
-    { img: 'categories_anarkali.jpg', category: 'Anarkali', desc: 'Elegant Flowing Silhouettes' },
-    { img: 'ANARKALI.png', category: 'Anarkali', desc: 'Traditional Grace' },
-    { img: 'categories_plazzo.jpg', category: 'Palazzo', desc: 'Contemporary Comfort' },
-    { img: 'download (1).jpg', category: 'Straight Cut', desc: 'Classic Sophistication' },
-    { img: 'download (2).jpg', category: 'Sharara', desc: 'Festive Glamour' }
+  const [thumbnails, setThumbnails] = useState([])
+  const [activeIndex, setActiveIndex] = useState(0)
+  const [loading, setLoading] = useState(true)
+
+  // Default fallback images
+  const defaultThumbnails = [
+    { img: '/images/coll_1_NBG.png', category: 'Anarkali', desc: 'Timeless Grace' },
+    { img: '/images/coll2_NBG.jpg', category: 'Anarkali', desc: 'Contemporary Elegance' },
+    { img: '/images/coll3_NBG.png', category: 'Palazzo', desc: 'Contemporary Comfort' },
+    { img: '/images/coll4_NBG.png', category: 'Straight Cut', desc: 'Classic Sophistication' },
+    { img: '/images/coll5_NBG.png', category: 'Sharara', desc: 'Regal Charm' }
   ]
 
-  const [activeIndex, setActiveIndex] = useState(0)
+  useEffect(() => {
+    fetchCarouselImages()
+  }, [])
+
+  const fetchCarouselImages = async () => {
+    try {
+      const response = await fetch('/api/carousel')
+      const data = await response.json()
+      
+      if (data.success && data.data.length > 0) {
+        // Transform API data to match component format
+        const carouselData = data.data.map(item => ({
+          img: item.image,
+          category: item.title || 'Featured',
+          desc: item.subtitle || 'Elegant Collection'
+        }))
+        setThumbnails(carouselData)
+      } else {
+        // Use fallback images
+        setThumbnails(defaultThumbnails)
+      }
+    } catch (error) {
+      console.error('Error fetching carousel images:', error)
+      // Use fallback images on error
+      setThumbnails(defaultThumbnails)
+    } finally {
+      setLoading(false)
+    }
+  }
 
   const menuItems = [
     { label: 'FABRICS', target: 'fabrics' },
@@ -39,12 +73,24 @@ const Hero = () => {
 
   // Auto-slideshow every 5 seconds
   useEffect(() => {
+    if (thumbnails.length === 0) return
+    
     const interval = setInterval(() => {
       setActiveIndex((prev) => (prev + 1) % thumbnails.length)
     }, 5000)
 
     return () => clearInterval(interval)
   }, [thumbnails.length])
+
+  if (loading) {
+    return (
+      <section className="hero-jewelry" id="home">
+        <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', height: '100vh' }}>
+          <p>Loading...</p>
+        </div>
+      </section>
+    )
+  }
 
   return (
     <section className="hero-jewelry" id="home">
@@ -63,7 +109,7 @@ const Hero = () => {
             style={{ left: `${idx * 35}px` }}
             onClick={() => setActiveIndex(idx)}
           >
-            <img src={`/images/${item.img}`} alt="" />
+            <img src={getImageUrl(item.img)} alt="" />
           </div>
         ))}
       </div>
@@ -107,7 +153,7 @@ const Hero = () => {
             >
               <div className="carousel-image-container">
                 <motion.img 
-                  src={`/images/${item.img}`} 
+                  src={getImageUrl(item.img)} 
                   alt="Featured"
                   animate={{ scale: [1, 1.01] }}
                   transition={{
