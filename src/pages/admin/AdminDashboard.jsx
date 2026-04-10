@@ -6,6 +6,7 @@ import NewArrivalsManager from './components/NewArrivalsManager'
 import ProductsManager from './components/ProductsManager'
 import OrdersManager from './components/OrdersManager'
 import CollectionManager from './components/CollectionManager'
+import MagazineManager from './components/MagazineManager'
 
 const AdminDashboard = () => {
   const [activeTab, setActiveTab] = useState('overview')
@@ -121,6 +122,17 @@ const AdminDashboard = () => {
           </button>
 
           <button 
+            className={activeTab === 'magazine' ? 'active' : ''}
+            onClick={() => setActiveTab('magazine')}
+          >
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor">
+              <path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/>
+              <path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"/>
+            </svg>
+            Magazine
+          </button>
+
+          <button 
             className={activeTab === 'orders' ? 'active' : ''}
             onClick={() => setActiveTab('orders')}
           >
@@ -216,6 +228,7 @@ const AdminDashboard = () => {
         {activeTab === 'new-arrivals' && <NewArrivalsManager />}
         {activeTab === 'products' && <ProductsManager />}
         {activeTab === 'collection' && <CollectionManager />}
+        {activeTab === 'magazine' && <MagazineManager />}
         {activeTab === 'orders' && <OrdersManager />}
       </main>
     </div>

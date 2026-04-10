@@ -58,7 +58,8 @@ const Navbar = ({ onCartOpen, onWishlistOpen }) => {
           className="logo"
           whileHover={{ scale: 1.05 }}
           transition={{ duration: 0.3 }}
-          onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })}
+          onClick={() => navigate('/')}
+          style={{ cursor: 'pointer' }}
         >
           <img src="/images/logoSEEMEE1.png" alt="See Mee Logo" className="logo-image" />
         </motion.div>

@@ -11,6 +11,7 @@ import productRoutes from './routes/products.js'
 import orderRoutes from './routes/orders.js'
 import uploadRoutes from './routes/upload.js'
 import newArrivalRoutes from './routes/newArrivals.js'
+import magazineRoutes from './routes/magazine.js'
 
 dotenv.config()
 
@@ -38,6 +39,7 @@ app.use('/api/products', productRoutes)
 app.use('/api/orders', orderRoutes)
 app.use('/api/upload', uploadRoutes)
 app.use('/api/new-arrivals', newArrivalRoutes)
+app.use('/api/magazine', magazineRoutes)
 
 // MongoDB Connection (only for local development)
 if (process.env.NODE_ENV !== 'production' || !process.env.VERCEL) {

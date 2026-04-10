@@ -1,35 +1,72 @@
 import { useState, useEffect } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
+import { getImageUrl } from '../utils/imageHelper'
 import './Magazine.css'
 
 const Magazine = () => {
   const [currentIndex, setCurrentIndex] = useState(0)
-  
-  const magazineStories = [
-    {
-      image: '/images/MAGAZINE1.jpg',
-      title: 'Timeless Elegance',
-      description: 'Crafted with passion, designed for grace. Every stitch tells a story of tradition and artistry.'
-    },
-    {
-      image: '/images/MAGAZINE2.jpg',
-      title: 'Heritage Redefined',
-      description: 'Where ancient craftsmanship meets contemporary style, creating pieces that transcend time.'
-    },
-    {
-      image: '/images/MAGAZINE3.jpg',
-      title: 'Artisan Excellence',
-      description: 'Hand-picked fabrics, intricate embroidery, and attention to detail that defines luxury.'
-    },
-    {
-      image: '/images/MAGAZINE4.jpg',
-      title: 'Your Story, Our Creation',
-      description: 'Each piece is a celebration of individuality, designed to make you feel extraordinary.'
+  const [magazineStories, setMagazineStories] = useState([])
+  const [loading, setLoading] = useState(true)
+
+  useEffect(() => {
+    fetchMagazineStories()
+  }, [])
+
+  const fetchMagazineStories = async () => {
+    try {
+      const response = await fetch('/api/magazine')
+      const data = await response.json()
+      if (data.success && data.data.length > 0) {
+        setMagazineStories(data.data)
+      } else {
+        // Fallback to default stories if no data
+        setMagazineStories([
+          {
+            image: '/images/MAGAZINE1.jpg',
+            title: 'Timeless Elegance',
+            description: 'Crafted with passion, designed for grace. Every stitch tells a story of tradition and artistry.',
+            order: 0
+          },
+          {
+            image: '/images/MAGAZINE2.jpg',
+            title: 'Heritage Redefined',
+            description: 'Where ancient craftsmanship meets contemporary style, creating pieces that transcend time.',
+            order: 1
+          },
+          {
+            image: '/images/MAGAZINE3.jpg',
+            title: 'Artisan Excellence',
+            description: 'Hand-picked fabrics, intricate embroidery, and attention to detail that defines luxury.',
+            order: 2
+          },
+          {
+            image: '/images/MAGAZINE4.jpg',
+            title: 'Your Story, Our Creation',
+            description: 'Each piece is a celebration of individuality, designed to make you feel extraordinary.',
+            order: 3
+          }
+        ])
+      }
+    } catch (error) {
+      console.error('Error fetching magazine stories:', error)
+      // Use fallback stories on error
+      setMagazineStories([
+        {
+          image: '/images/MAGAZINE1.jpg',
+          title: 'Timeless Elegance',
+          description: 'Crafted with passion, designed for grace. Every stitch tells a story of tradition and artistry.',
+          order: 0
+        }
+      ])
+    } finally {
+      setLoading(false)
     }
-  ]
+  }
 
   // Auto-rotate slideshow every 5 seconds
   useEffect(() => {
+    if (magazineStories.length === 0) return
+    
     const interval = setInterval(() => {
       setCurrentIndex((prevIndex) => 
         prevIndex === magazineStories.length - 1 ? 0 : prevIndex + 1
@@ -42,6 +79,23 @@ const Magazine = () => {
   const goToSlide = (index) => {
     setCurrentIndex(index)
   }
+
+  if (loading) {
+    return (
+      <section className="magazine-section" id="magazine">
+        <div className="magazine-container">
+          <div className="loading-state">Loading magazine...</div>
+        </div>
+      </section>
+    )
+  }
+
+  if (magazineStories.length === 0) {
+    return null
+  }
+
+  const currentStory = magazineStories[currentIndex]
+  const isImageLeft = currentStory.order % 2 === 0
 
   return (
     <section className="magazine-section" id="magazine">
@@ -62,45 +116,49 @@ const Magazine = () => {
           <AnimatePresence mode="wait">
             <motion.div
               key={currentIndex}
-              className="magazine-slide-wrapper"
+              className={`magazine-slide-wrapper ${isImageLeft ? 'image-left' : 'image-right'}`}
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
               exit={{ opacity: 0 }}
               transition={{ duration: 1 }}
             >
-              <div className="magazine-image-container">
+              <motion.div 
+                className="magazine-image-container"
+                initial={{ opacity: 0, x: isImageLeft ? -50 : 50 }}
+                animate={{ opacity: 1, x: 0 }}
+                transition={{ delay: 0.2, duration: 0.8 }}
+              >
                 <img
-                  src={magazineStories[currentIndex].image}
-                  alt={magazineStories[currentIndex].title}
+                  src={getImageUrl(currentStory.image)}
+                  alt={currentStory.title}
                   className="magazine-img"
                 />
                 <div className="magazine-gradient-overlay" />
-                
-                {/* Story Text Overlay */}
-                <motion.div 
-                  className="magazine-story-overlay"
-                  initial={{ opacity: 0, y: 50 }}
+              </motion.div>
+
+              <motion.div 
+                className="magazine-story-content"
+                initial={{ opacity: 0, x: isImageLeft ? 50 : -50 }}
+                animate={{ opacity: 1, x: 0 }}
+                transition={{ delay: 0.4, duration: 0.8 }}
+              >
+                <motion.h3 
+                  className="story-title"
+                  initial={{ opacity: 0, y: 20 }}
                   animate={{ opacity: 1, y: 0 }}
-                  transition={{ delay: 0.3, duration: 0.8 }}
+                  transition={{ delay: 0.6, duration: 0.6 }}
                 >
-                  <motion.h3 
-                    className="story-title"
-                    initial={{ opacity: 0, y: 20 }}
-                    animate={{ opacity: 1, y: 0 }}
-                    transition={{ delay: 0.5, duration: 0.6 }}
-                  >
-                    {magazineStories[currentIndex].title}
-                  </motion.h3>
-                  <motion.p 
-                    className="story-description"
-                    initial={{ opacity: 0, y: 20 }}
-                    animate={{ opacity: 1, y: 0 }}
-                    transition={{ delay: 0.7, duration: 0.6 }}
-                  >
-                    {magazineStories[currentIndex].description}
-                  </motion.p>
-                </motion.div>
-              </div>
+                  {currentStory.title}
+                </motion.h3>
+                <motion.p 
+                  className="story-description"
+                  initial={{ opacity: 0, y: 20 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{ delay: 0.8, duration: 0.6 }}
+                >
+                  {currentStory.description}
+                </motion.p>
+              </motion.div>
             </motion.div>
           </AnimatePresence>
 
