@@ -18,46 +18,9 @@ const Magazine = () => {
       const data = await response.json()
       if (data.success && data.data.length > 0) {
         setMagazineStories(data.data)
-      } else {
-        // Fallback to default stories if no data
-        setMagazineStories([
-          {
-            image: '/images/MAGAZINE1.jpg',
-            title: 'Timeless Elegance',
-            description: 'Crafted with passion, designed for grace. Every stitch tells a story of tradition and artistry.',
-            order: 0
-          },
-          {
-            image: '/images/MAGAZINE2.jpg',
-            title: 'Heritage Redefined',
-            description: 'Where ancient craftsmanship meets contemporary style, creating pieces that transcend time.',
-            order: 1
-          },
-          {
-            image: '/images/MAGAZINE3.jpg',
-            title: 'Artisan Excellence',
-            description: 'Hand-picked fabrics, intricate embroidery, and attention to detail that defines luxury.',
-            order: 2
-          },
-          {
-            image: '/images/MAGAZINE4.jpg',
-            title: 'Your Story, Our Creation',
-            description: 'Each piece is a celebration of individuality, designed to make you feel extraordinary.',
-            order: 3
-          }
-        ])
       }
     } catch (error) {
       console.error('Error fetching magazine stories:', error)
-      // Use fallback stories on error
-      setMagazineStories([
-        {
-          image: '/images/MAGAZINE1.jpg',
-          title: 'Timeless Elegance',
-          description: 'Crafted with passion, designed for grace. Every stitch tells a story of tradition and artistry.',
-          order: 0
-        }
-      ])
     } finally {
       setLoading(false)
     }

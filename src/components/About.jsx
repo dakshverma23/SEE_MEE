@@ -1,9 +1,10 @@
-import React, { useEffect, useState } from 'react'
+import { useEffect, useState } from 'react'
 import { motion } from 'framer-motion'
 import './About.css'
 
 const About = () => {
-  const [aboutImage, setAboutImage] = useState('/images/about.jpg')
+  const [aboutImage, setAboutImage] = useState(null)
+  const [loading, setLoading] = useState(true)
 
   useEffect(() => {
     // Fetch about image from API
@@ -13,8 +14,12 @@ const About = () => {
         if (data.success && data.data.aboutImage) {
           setAboutImage(data.data.aboutImage)
         }
+        setLoading(false)
       })
-      .catch(err => console.error('Error fetching about image:', err))
+      .catch(err => {
+        console.error('Error fetching about image:', err)
+        setLoading(false)
+      })
   }, [])
 
   return (
@@ -29,7 +34,21 @@ const About = () => {
         >
           <div className="image-frame">
             <div className="about-placeholder">
-              <img src={aboutImage} alt="About See Mee" />
+              {aboutImage ? (
+                <img src={aboutImage} alt="About See Mee" />
+              ) : (
+                <div style={{ 
+                  width: '100%', 
+                  height: '100%', 
+                  display: 'flex', 
+                  alignItems: 'center', 
+                  justifyContent: 'center',
+                  background: 'var(--warm-beige)',
+                  color: 'var(--charcoal)'
+                }}>
+                  Loading...
+                </div>
+              )}
             </div>
           </div>
         </motion.div>

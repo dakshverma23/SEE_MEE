@@ -3,30 +3,9 @@ import { motion } from 'framer-motion'
 import './NewArrivals.css'
 
 const NewArrivals = () => {
-  const [arrivals, setArrivals] = useState([
-    {
-      id: 1,
-      category: 'anarkali',
-      imagePath: '/images/ANARKALI.png',
-      alt: 'Anarkali Suit',
-      fallbackText: 'Anarkali'
-    },
-    {
-      id: 2,
-      category: 'palazzo',
-      imagePath: '/images/Plazzo_suit.jpg',
-      alt: 'Palazzo Suit',
-      fallbackText: 'Palazzo'
-    },
-    {
-      id: 3,
-      category: 'straight-cut',
-      imagePath: '/images/Straightcut.jpg',
-      alt: 'Straight Cut Suit',
-      fallbackText: 'Straight Cut'
-    }
-  ])
+  const [arrivals, setArrivals] = useState([])
   const [imageErrors, setImageErrors] = useState({})
+  const [loading, setLoading] = useState(true)
 
   useEffect(() => {
     fetchArrivals()
@@ -38,20 +17,12 @@ const NewArrivals = () => {
       const data = await response.json()
       
       if (data.success && data.data.length > 0) {
-        const updatedArrivals = arrivals.map(arrival => {
-          const dbArrival = data.data.find(item => item.category === arrival.category)
-          if (dbArrival && dbArrival.image) {
-            return {
-              ...arrival,
-              imagePath: dbArrival.image
-            }
-          }
-          return arrival
-        })
-        setArrivals(updatedArrivals)
+        setArrivals(data.data)
       }
     } catch (error) {
       console.error('Error fetching arrivals:', error)
+    } finally {
+      setLoading(false)
     }
   }
 
@@ -64,6 +35,10 @@ const NewArrivals = () => {
     if (element) {
       element.scrollIntoView({ behavior: 'smooth' })
     }
+  }
+
+  if (loading || arrivals.length === 0) {
+    return null
   }
 
   return (

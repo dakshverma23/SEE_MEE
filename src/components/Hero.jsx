@@ -4,25 +4,13 @@ import { getOptimizedImageUrl } from '../utils/imageHelper'
 import './Hero.css'
 
 const Hero = () => {
-  // Default fallback images - shown immediately
-  const defaultThumbnails = [
-    { img: '/images/coll_1_NBG.png', category: 'Anarkali', desc: 'Timeless Grace' },
-    { img: '/images/coll2_NBG.jpg', category: 'Anarkali', desc: 'Contemporary Elegance' },
-    { img: '/images/coll3_NBG.png', category: 'Palazzo', desc: 'Contemporary Comfort' },
-    { img: '/images/coll4_NBG.png', category: 'Straight Cut', desc: 'Classic Sophistication' },
-    { img: '/images/coll5_NBG.png', category: 'Sharara', desc: 'Regal Charm' }
-  ]
-
-  const [thumbnails, setThumbnails] = useState(defaultThumbnails)
+  // Start with empty array - will load from API
+  const [thumbnails, setThumbnails] = useState([])
   const [activeIndex, setActiveIndex] = useState(0)
+  const [loading, setLoading] = useState(true)
 
   useEffect(() => {
-    // Defer API call to not block initial render
-    const timer = setTimeout(() => {
-      fetchCarouselImages()
-    }, 100)
-    
-    return () => clearTimeout(timer)
+    fetchCarouselImages()
   }, [])
 
   const fetchCarouselImages = async () => {
@@ -41,7 +29,8 @@ const Hero = () => {
       }
     } catch (error) {
       console.error('Error fetching carousel images:', error)
-      // Keep using fallback images on error
+    } finally {
+      setLoading(false)
     }
   }
 
@@ -79,6 +68,23 @@ const Hero = () => {
 
     return () => clearInterval(interval)
   }, [thumbnails.length])
+
+  if (loading || thumbnails.length === 0) {
+    return (
+      <section className="hero-jewelry" id="home">
+        <div style={{ 
+          display: 'flex', 
+          justifyContent: 'center', 
+          alignItems: 'center', 
+          height: '100vh',
+          fontFamily: 'var(--font-body)',
+          color: 'var(--charcoal)'
+        }}>
+          <p>Loading carousel...</p>
+        </div>
+      </section>
+    )
+  }
 
   return (
     <section className="hero-jewelry" id="home">
