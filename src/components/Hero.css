@@ -17,7 +17,7 @@
   font-family: var(--font-heading);
   font-size: 7rem;
   font-weight: 250;
-  color: #927775; /* dusty rose */
+  color: #8B7355; /* dusty rose */
   letter-spacing: -4px;
   z-index: 1;
 }
@@ -30,7 +30,7 @@
   font-family: var(--font-heading);
   font-size: 7rem;
   font-weight: 250;
-  color: #927775; /* dusty rose */
+  color: #8B7355; /* dusty rose */
   letter-spacing: -4px;
   z-index: 1;
 }
