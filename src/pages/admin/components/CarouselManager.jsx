@@ -170,31 +170,31 @@ const CarouselManager = () => {
 
     const defaultImages = [
       {
-        image: '/images/coll_1_NBG.png',
+        image: 'https://via.placeholder.com/400x600?text=Carousel+1',
         title: 'Anarkali',
         subtitle: 'Timeless Grace',
         order: 0
       },
       {
-        image: '/images/coll2_NBG.jpg',
+        image: 'https://via.placeholder.com/400x600?text=Carousel+2',
         title: 'Anarkali',
         subtitle: 'Contemporary Elegance',
         order: 1
       },
       {
-        image: '/images/coll3_NBG.png',
+        image: 'https://via.placeholder.com/400x600?text=Carousel+3',
         title: 'Palazzo',
         subtitle: 'Contemporary Comfort',
         order: 2
       },
       {
-        image: '/images/coll4_NBG.png',
+        image: 'https://via.placeholder.com/400x600?text=Carousel+4',
         title: 'Straight Cut',
         subtitle: 'Classic Sophistication',
         order: 3
       },
       {
-        image: '/images/coll5_NBG.png',
+        image: 'https://via.placeholder.com/400x600?text=Carousel+5',
         title: 'Sharara',
         subtitle: 'Regal Charm',
         order: 4

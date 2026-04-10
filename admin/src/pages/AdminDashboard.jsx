@@ -63,7 +63,7 @@ const AdminDashboard = () => {
     <div className="admin-dashboard">
       <aside className="admin-sidebar">
         <div className="sidebar-header">
-          <img src="http://localhost:3000/images/logoSEEMEE1.png" alt="See Mee Logo" className="admin-logo" />
+          <img src="/images/logoSEEMEE1.png" alt="See Mee Logo" className="admin-logo" />
           <span className="admin-subtitle">Admin Panel</span>
         </div>
 

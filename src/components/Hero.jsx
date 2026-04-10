@@ -104,7 +104,11 @@ const Hero = () => {
             onClick={() => setActiveIndex(idx)}
             aria-label={`View ${item.category} collection`}
           >
-            <img src={getOptimizedImageUrl(item.img, 'thumbnail')} alt={item.category} />
+            <img 
+              src={getOptimizedImageUrl(item.img, 'thumbnail')} 
+              alt={item.category}
+              crossOrigin="anonymous"
+            />
           </button>
         ))}
       </div>
@@ -151,6 +155,7 @@ const Hero = () => {
                   src={getOptimizedImageUrl(item.img, 'hero')} 
                   alt={`${item.category} - ${item.desc}`}
                   fetchpriority={position === 0 ? "high" : "auto"}
+                  crossOrigin="anonymous"
                   animate={{ scale: [1, 1.01] }}
                   transition={{
                     duration: 4,

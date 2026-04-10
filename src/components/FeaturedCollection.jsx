@@ -195,6 +195,7 @@ const FeaturedCollection = () => {
                             src={getOptimizedImageUrl(product.images && product.images[0], 'product')}
                             alt={product.name}
                             className="product-img"
+                            crossOrigin="anonymous"
                             whileHover={{ scale: 1.08 }}
                             transition={{ duration: 0.5 }}
                           />

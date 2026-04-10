@@ -119,7 +119,7 @@ const SiteSettingsManager = () => {
     const newFabric = {
       title: 'New Fabric',
       description: 'Description of the fabric',
-      image: '/images/silk.jpg',
+      image: 'https://via.placeholder.com/300x300?text=Upload+Image',
       order: settings.fabrics.length
     }
     const updatedFabrics = [...settings.fabrics, newFabric]
@@ -164,7 +164,7 @@ const SiteSettingsManager = () => {
       subtitle: 'Subtitle',
       description: 'Description of the category',
       features: ['Feature 1', 'Feature 2', 'Feature 3'],
-      image: '/images/categories_anarkali.jpg',
+      image: 'https://via.placeholder.com/400x600?text=Upload+Image',
       order: settings.categorySlides.length
     }
     const updatedCategories = [...settings.categorySlides, newCategory]

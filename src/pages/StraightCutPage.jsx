@@ -35,7 +35,7 @@ const StraightCutPage = () => {
 
   return (
     <div className="category-page">
-      <div className="category-hero" style={{ backgroundImage: `url(/images/categories_straight.jpg)` }}>
+      <div className="category-hero" style={{ background: 'linear-gradient(135deg, var(--primary-gold) 0%, var(--dark-gold) 100%)' }}>
         <div className="category-hero-overlay">
           <motion.div 
             className="category-hero-content"

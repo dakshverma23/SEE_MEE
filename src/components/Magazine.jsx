@@ -95,6 +95,7 @@ const Magazine = () => {
                   src={getImageUrl(currentStory.image)}
                   alt={currentStory.title}
                   className="magazine-img"
+                  crossOrigin="anonymous"
                 />
                 <div className="magazine-gradient-overlay" />
               </motion.div>

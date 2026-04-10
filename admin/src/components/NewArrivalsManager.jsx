@@ -119,7 +119,7 @@ const NewArrivalsManager = () => {
                   src={arrivals[cat.key]} 
                   alt={cat.label}
                   onError={(e) => {
-                    e.target.src = `/images/${cat.current}`
+                    e.target.src = 'https://via.placeholder.com/300x400?text=Upload+Image'
                   }}
                 />
               ) : (

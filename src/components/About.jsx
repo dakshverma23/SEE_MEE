@@ -35,7 +35,7 @@ const About = () => {
           <div className="image-frame">
             <div className="about-placeholder">
               {aboutImage ? (
-                <img src={aboutImage} alt="About See Mee" />
+                <img src={aboutImage} alt="About See Mee" crossOrigin="anonymous" />
               ) : (
                 <div style={{ 
                   width: '100%', 

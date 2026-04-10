@@ -82,7 +82,7 @@ const Wishlist = ({ isOpen, onClose }) => {
                           layout
                         >
                           <div className="item-image-container">
-                            <img src={`/images/${item.image}`} alt={item.name} />
+                            <img src={item.image} alt={item.name} />
                           </div>
                           
                           <div className="item-details">
