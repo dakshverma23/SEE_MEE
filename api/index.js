@@ -91,10 +91,14 @@ async function createApp() {
     const { default: newArrivalRoutes } = await import('../server/routes/newArrivals.js')
     console.log('✅ New arrival routes loaded')
 
+    const { default: magazineRoutes } = await import('../server/routes/magazine.js')
+    console.log('✅ Magazine routes loaded')
+
     app.use('/api/auth', authRoutes)
     app.use('/api/products', productRoutes)
     app.use('/api/orders', orderRoutes)
     app.use('/api/new-arrivals', newArrivalRoutes)
+    app.use('/api/magazine', magazineRoutes)
 
     // Only load upload routes if Cloudinary is configured
     if (process.env.CLOUDINARY_CLOUD_NAME) {
