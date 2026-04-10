@@ -129,6 +129,8 @@
     border-radius: 190px 190px 0 0;
   /* display: block; */
   border-radius: inherit;
+   transform: translateZ(0); 
+  -webkit-backface-visibility: hidden;  /* Prevents rendering glitches */
 }
 
 .carousel-label {
