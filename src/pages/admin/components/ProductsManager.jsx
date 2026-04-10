@@ -78,8 +78,15 @@ const ProductsManager = () => {
   }
 
   const handleImageUpload = async (files) => {
-    if (files.length === 0 || files.length > 10) {
-      alert('Please select 1-10 images')
+    if (files.length === 0) {
+      alert('Please select at least one image')
+      return
+    }
+
+    // Check total images (existing + new)
+    const totalImages = formData.images.length + files.length
+    if (totalImages > 10) {
+      alert(`Cannot upload ${files.length} images. You already have ${formData.images.length} images. Maximum is 10 total.`)
       return
     }
 
@@ -112,11 +119,12 @@ const ProductsManager = () => {
         const imageUrls = data.data.map(img => img.url)
         console.log('Image URLs:', imageUrls) // Debug log
         
+        // ADD to existing images instead of replacing
         setFormData(prev => ({
           ...prev,
-          images: imageUrls
+          images: [...prev.images, ...imageUrls]
         }))
-        alert(`${imageUrls.length} image(s) uploaded successfully!`)
+        alert(`${imageUrls.length} image(s) uploaded successfully! Total: ${formData.images.length + imageUrls.length}`)
       } else {
         alert('Failed to upload images: ' + (data.message || 'Unknown error'))
       }
@@ -130,6 +138,13 @@ const ProductsManager = () => {
     } finally {
       setUploading(false)
     }
+  }
+
+  const removeImage = (indexToRemove) => {
+    setFormData(prev => ({
+      ...prev,
+      images: prev.images.filter((_, index) => index !== indexToRemove)
+    }))
   }
 
   const handleVideoUpload = async (file) => {
@@ -479,23 +494,36 @@ const ProductsManager = () => {
             </div>
 
             <div className="form-group">
-              <label>Images (Max 10) *</label>
+              <label>Images ({formData.images.length}/10) *</label>
               <input
                 type="file"
                 multiple
                 accept="image/*"
                 onChange={(e) => handleImageUpload(e.target.files)}
-                disabled={uploading}
+                disabled={uploading || formData.images.length >= 10}
               />
               {formData.images.length > 0 && (
                 <div className="uploaded-images">
                   {formData.images.map((img, idx) => (
                     <div key={idx} className="thumb">
                       <img src={getImageUrl(img)} alt="" />
+                      <button 
+                        type="button"
+                        className="remove-image-btn"
+                        onClick={() => removeImage(idx)}
+                        title="Remove image"
+                      >
+                        ×
+                      </button>
                     </div>
                   ))}
                 </div>
               )}
+              <small className="form-hint">
+                {formData.images.length < 10 
+                  ? `You can upload ${10 - formData.images.length} more image(s)`
+                  : 'Maximum 10 images reached'}
+              </small>
             </div>
 
             <div className="form-group">

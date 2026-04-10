@@ -120,10 +120,62 @@ const MagazineManager = () => {
       title: '',
       description: '',
       image: '',
-      order: magazines.length
+      order: magazines.length  // Auto-assign next order number
     })
     setEditingMagazine(null)
     setShowForm(false)
+  }
+
+  const seedDefaultMagazines = async () => {
+    if (!confirm('This will create 4 default magazine items. Continue?')) return
+
+    const defaultMagazines = [
+      {
+        title: 'Timeless Elegance',
+        description: 'Crafted with passion, designed for grace. Every stitch tells a story of tradition and artistry.',
+        image: '/images/MAGAZINE1.jpg',
+        order: 0
+      },
+      {
+        title: 'Heritage Redefined',
+        description: 'Where ancient craftsmanship meets contemporary style, creating pieces that transcend time.',
+        image: '/images/MAGAZINE2.jpg',
+        order: 1
+      },
+      {
+        title: 'Artisan Excellence',
+        description: 'Hand-picked fabrics, intricate embroidery, and attention to detail that defines luxury.',
+        image: '/images/MAGAZINE3.jpg',
+        order: 2
+      },
+      {
+        title: 'Your Story, Our Creation',
+        description: 'Each piece is a celebration of individuality, designed to make you feel extraordinary.',
+        image: '/images/MAGAZINE4.jpg',
+        order: 3
+      }
+    ]
+
+    try {
+      const token = localStorage.getItem('adminToken')
+      
+      for (const mag of defaultMagazines) {
+        await fetch('/api/magazine', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+            'Authorization': `Bearer ${token}`
+          },
+          body: JSON.stringify(mag)
+        })
+      }
+      
+      fetchMagazines()
+      alert('✅ Default magazines created successfully!')
+    } catch (error) {
+      console.error('Seed error:', error)
+      alert('Failed to seed magazines. Make sure the server is running.')
+    }
   }
 
   const startEdit = (magazine) => {
@@ -144,9 +196,16 @@ const MagazineManager = () => {
           <h1>Magazine Management</h1>
           <p>Manage your magazine stories and content</p>
         </div>
-        <button className="add-btn" onClick={() => setShowForm(!showForm)}>
-          {showForm ? 'Cancel' : '+ Add Magazine Item'}
-        </button>
+        <div className="header-actions">
+          {magazines.length === 0 && (
+            <button className="seed-btn" onClick={seedDefaultMagazines}>
+              📚 Load Default Magazines
+            </button>
+          )}
+          <button className="add-btn" onClick={() => setShowForm(!showForm)}>
+            {showForm ? 'Cancel' : '+ Add Magazine Item'}
+          </button>
+        </div>
       </div>
 
       {showForm && (
@@ -195,14 +254,18 @@ const MagazineManager = () => {
             </div>
 
             <div className="form-group">
-              <label>Display Order</label>
+              <label>Display Order (Auto-assigned)</label>
               <input
                 type="number"
                 value={formData.order}
                 onChange={(e) => setFormData({...formData, order: parseInt(e.target.value)})}
                 min="0"
               />
-              <small className="form-hint">Lower numbers appear first. Odd numbers = image left, Even numbers = image right</small>
+              <small className="form-hint">
+                Order {formData.order}: <strong>{formData.order % 2 === 0 ? 'Image RIGHT, Text LEFT' : 'Image LEFT, Text RIGHT'}</strong>
+                <br/>
+                Current total: {magazines.length} magazine items
+              </small>
             </div>
 
             <div className="form-actions">

@@ -29,6 +29,33 @@
   font-size: 0.95rem;
 }
 
+.header-actions {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+}
+
+.seed-btn {
+  padding: 0.8rem 1.5rem;
+  background: linear-gradient(135deg, #4CAF50, #45a049);
+  color: white;
+  border: none;
+  border-radius: 50px;
+  font-weight: 600;
+  font-size: 0.9rem;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  box-shadow: 0 4px 12px rgba(76, 175, 80, 0.3);
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.seed-btn:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 18px rgba(76, 175, 80, 0.4);
+}
+
 .add-btn {
   padding: 0.8rem 1.8rem;
   background: linear-gradient(135deg, var(--primary-gold), var(--dark-gold));
@@ -130,6 +157,13 @@
   color: var(--charcoal);
   opacity: 0.6;
   font-style: italic;
+  line-height: 1.5;
+}
+
+.form-hint strong {
+  color: var(--primary-gold);
+  font-weight: 700;
+  font-style: normal;
 }
 
 .form-actions {
@@ -323,8 +357,15 @@
     align-items: flex-start;
   }
 
+  .header-actions {
+    width: 100%;
+    flex-direction: column;
+  }
+
+  .seed-btn,
   .add-btn {
     width: 100%;
+    justify-content: center;
   }
 
   .magazines-grid {
