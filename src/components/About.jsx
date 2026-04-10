@@ -1,90 +1,19 @@
 import React, { useEffect, useRef } from 'react'
 import { motion } from 'framer-motion'
-import gsap from 'gsap'
-import { ScrollTrigger } from 'gsap/ScrollTrigger'
 import './About.css'
-
-gsap.registerPlugin(ScrollTrigger)
 
 const About = () => {
   const sectionRef = useRef(null)
-
-  useEffect(() => {
-    const section = sectionRef.current
-    if (!section) return
-
-    const animations = []
-
-    const aboutImage = section.querySelector('.about-image')
-    const aboutContent = section.querySelector('.about-content')
-    const features = section.querySelectorAll('.feature')
-
-    if (aboutImage) {
-      animations.push(gsap.fromTo(aboutImage,
-        { x: -80, opacity: 0 },
-        {
-          x: 0,
-          opacity: 1,
-          scrollTrigger: {
-            trigger: section,
-            start: 'top 70%',
-            end: 'top 40%',
-            scrub: 0.5,
-          },
-        }
-      ))
-    }
-
-    if (aboutContent) {
-      animations.push(gsap.fromTo(aboutContent,
-        { x: 80, opacity: 0 },
-        {
-          x: 0,
-          opacity: 1,
-          scrollTrigger: {
-            trigger: section,
-            start: 'top 70%',
-            end: 'top 40%',
-            scrub: 0.5,
-          },
-        }
-      ))
-    }
-
-    if (features.length > 0) {
-      animations.push(gsap.fromTo(features,
-        { y: 40, opacity: 0 },
-        {
-          y: 0,
-          opacity: 1,
-          scrollTrigger: {
-            trigger: section.querySelector('.about-features'),
-            start: 'top 80%',
-            end: 'top 50%',
-            scrub: 0.5,
-          },
-          stagger: 0.1,
-        }
-      ))
-    }
-
-    return () => {
-      animations.forEach(anim => {
-        if (anim && anim.scrollTrigger) {
-          anim.scrollTrigger.kill()
-        }
-        if (anim) {
-          anim.kill()
-        }
-      })
-    }
-  }, [])
 
   return (
     <section className="about ornamental-pattern" id="about" ref={sectionRef}>
       <div className="about-container">
         <motion.div 
           className="about-image"
+          initial={{ x: -80, opacity: 0 }}
+          whileInView={{ x: 0, opacity: 1 }}
+          viewport={{ once: true, amount: 0.3 }}
+          transition={{ duration: 0.8, ease: "easeOut" }}
         >
           <div className="image-frame">
             <div className="about-placeholder">
@@ -95,6 +24,10 @@ const About = () => {
 
         <motion.div 
           className="about-content"
+          initial={{ x: 80, opacity: 0 }}
+          whileInView={{ x: 0, opacity: 1 }}
+          viewport={{ once: true, amount: 0.3 }}
+          transition={{ duration: 0.8, ease: "easeOut" }}
         >
           <span className="section-subtitle">Our Story</span>
           <h2 className="section-title">Crafting Elegance Since Generations</h2>
@@ -114,6 +47,10 @@ const About = () => {
           <div className="about-features">
             <motion.div 
               className="feature"
+              initial={{ y: 40, opacity: 0 }}
+              whileInView={{ y: 0, opacity: 1 }}
+              viewport={{ once: true, amount: 0.3 }}
+              transition={{ duration: 0.6, delay: 0.1 }}
               whileHover={{ scale: 1.05 }}
             >
               <div className="feature-icon">
@@ -128,6 +65,10 @@ const About = () => {
 
             <motion.div 
               className="feature"
+              initial={{ y: 40, opacity: 0 }}
+              whileInView={{ y: 0, opacity: 1 }}
+              viewport={{ once: true, amount: 0.3 }}
+              transition={{ duration: 0.6, delay: 0.2 }}
               whileHover={{ scale: 1.05 }}
             >
               <div className="feature-icon">
@@ -141,6 +82,10 @@ const About = () => {
 
             <motion.div 
               className="feature"
+              initial={{ y: 40, opacity: 0 }}
+              whileInView={{ y: 0, opacity: 1 }}
+              viewport={{ once: true, amount: 0.3 }}
+              transition={{ duration: 0.6, delay: 0.3 }}
               whileHover={{ scale: 1.05 }}
             >
               <div className="feature-icon">

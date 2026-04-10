@@ -1,16 +1,11 @@
-import React, { useContext, useEffect, useRef, useState } from 'react'
+import React, { useContext, useEffect, useState } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
 import { CartContext } from '../context/CartContext'
-import gsap from 'gsap'
-import { ScrollTrigger } from 'gsap/ScrollTrigger'
 import { getImageUrl } from '../utils/imageHelper'
 import './FeaturedCollection.css'
 
-gsap.registerPlugin(ScrollTrigger)
-
 const FeaturedCollection = () => {
   const { addToCart, toggleWishlist, isInWishlist } = useContext(CartContext)
-  const sectionRef = useRef(null)
   const [products, setProducts] = useState([])
   const [loading, setLoading] = useState(true)
   const [currentIndex, setCurrentIndex] = useState(0)
@@ -43,7 +38,7 @@ const FeaturedCollection = () => {
 
     const interval = setInterval(() => {
       paginate(1)
-    }, 2000) // Change slide every 2 seconds
+    }, 2000)
 
     return () => clearInterval(interval)
   }, [currentIndex, products.length, itemsPerView])
@@ -63,41 +58,6 @@ const FeaturedCollection = () => {
     handleResize()
     window.addEventListener('resize', handleResize)
     return () => window.removeEventListener('resize', handleResize)
-  }, [])
-
-  useEffect(() => {
-    const section = sectionRef.current
-    if (!section) return
-
-    const animations = []
-    const header = section.querySelector('.collection-header')
-
-    if (header) {
-      animations.push(gsap.fromTo(header,
-        { y: 40, opacity: 0 },
-        {
-          y: 0,
-          opacity: 1,
-          scrollTrigger: {
-            trigger: section,
-            start: 'top 80%',
-            end: 'top 50%',
-            scrub: 0.5,
-          },
-        }
-      ))
-    }
-
-    return () => {
-      animations.forEach(anim => {
-        if (anim && anim.scrollTrigger) {
-          anim.scrollTrigger.kill()
-        }
-        if (anim) {
-          anim.kill()
-        }
-      })
-    }
   }, [])
 
   const handleAddToCart = (product) => {
@@ -157,10 +117,14 @@ const FeaturedCollection = () => {
   const canGoNext = products.length > itemsPerView
 
   return (
-    <section className="featured-collection" id="featured-collection" ref={sectionRef}>
+    <section className="featured-collection" id="featured-collection">
       <div className="featured-collection-container">
         <motion.div 
           className="collection-header"
+          initial={{ opacity: 0, y: 40 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true, amount: 0.3 }}
+          transition={{ duration: 0.8 }}
         >
           <span className="collection-subtitle">Handpicked For You</span>
           <h2 className="collection-title">Featured Collection</h2>

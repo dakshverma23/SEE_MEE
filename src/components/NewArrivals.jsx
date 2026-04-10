@@ -1,13 +1,8 @@
-import { useState, useEffect, useRef } from 'react'
+import { useState, useEffect } from 'react'
 import { motion } from 'framer-motion'
-import gsap from 'gsap'
-import { ScrollTrigger } from 'gsap/ScrollTrigger'
 import './NewArrivals.css'
 
-gsap.registerPlugin(ScrollTrigger)
-
 const NewArrivals = () => {
-  const sectionRef = useRef(null)
   const [arrivals, setArrivals] = useState([
     {
       id: 1,
@@ -34,81 +29,6 @@ const NewArrivals = () => {
   const [imageErrors, setImageErrors] = useState({})
 
   useEffect(() => {
-    const section = sectionRef.current
-    if (!section) return
-
-    const animations = []
-
-    // Only animate if elements exist
-    const bannerFrame = section.querySelector('.banner-frame')
-    const imageWrappers = section.querySelectorAll('.arrival-image-wrapper')
-    const arrivalsText = section.querySelector('.arrivals-text')
-
-    if (bannerFrame) {
-      animations.push(gsap.fromTo(bannerFrame, 
-        { scale: 0.95, opacity: 0 },
-        {
-          scale: 1,
-          opacity: 1,
-          scrollTrigger: {
-            trigger: section,
-            start: 'top 80%',
-            end: 'top 50%',
-            scrub: 0.5,
-          },
-          ease: 'power2.out',
-        }
-      ))
-    }
-
-    if (imageWrappers.length > 0) {
-      animations.push(gsap.fromTo(imageWrappers,
-        { x: -50, opacity: 0 },
-        {
-          x: 0,
-          opacity: 1,
-          scrollTrigger: {
-            trigger: section.querySelector('.arrivals-images'),
-            start: 'top 75%',
-            end: 'top 45%',
-            scrub: 0.5,
-          },
-          stagger: 0.1,
-          ease: 'power2.out',
-        }
-      ))
-    }
-
-    if (arrivalsText) {
-      animations.push(gsap.fromTo(arrivalsText,
-        { x: 50, opacity: 0 },
-        {
-          x: 0,
-          opacity: 1,
-          scrollTrigger: {
-            trigger: arrivalsText,
-            start: 'top 75%',
-            end: 'top 50%',
-            scrub: 0.5,
-          },
-          ease: 'power2.out',
-        }
-      ))
-    }
-
-    return () => {
-      animations.forEach(anim => {
-        if (anim && anim.scrollTrigger) {
-          anim.scrollTrigger.kill()
-        }
-        if (anim) {
-          anim.kill()
-        }
-      })
-    }
-  }, [])
-
-  useEffect(() => {
     fetchArrivals()
   }, [])
 
@@ -121,7 +41,6 @@ const NewArrivals = () => {
         const updatedArrivals = arrivals.map(arrival => {
           const dbArrival = data.data.find(item => item.category === arrival.category)
           if (dbArrival && dbArrival.image) {
-            // Cloudinary URLs are complete, no need to prepend localhost
             return {
               ...arrival,
               imagePath: dbArrival.image
@@ -141,19 +60,21 @@ const NewArrivals = () => {
   }
 
   const handleCategoryClick = (category) => {
-    // Navigate to category section
     const element = document.getElementById('categories')
     if (element) {
       element.scrollIntoView({ behavior: 'smooth' })
     }
-    console.log(`Navigating to ${category} category`)
   }
 
   return (
-    <section className="new-arrivals" id="new-arrivals" ref={sectionRef}>
+    <section className="new-arrivals" id="new-arrivals">
       <div className="new-arrivals-container">
         <motion.div 
           className="arrivals-banner"
+          initial={{ scale: 0.95, opacity: 0 }}
+          whileInView={{ scale: 1, opacity: 1 }}
+          viewport={{ once: true, amount: 0.3 }}
+          transition={{ duration: 0.8, ease: "easeOut" }}
         >
           {/* Decorative Border Frame */}
           <div className="banner-frame">
@@ -177,6 +98,10 @@ const NewArrivals = () => {
                 <motion.div
                   key={arrival.id}
                   className="arrival-image-wrapper"
+                  initial={{ x: -50, opacity: 0 }}
+                  whileInView={{ x: 0, opacity: 1 }}
+                  viewport={{ once: true, amount: 0.3 }}
+                  transition={{ duration: 0.6, delay: index * 0.1 }}
                   whileHover={{ scale: 1.05, y: -10 }}
                   onClick={() => handleCategoryClick(arrival.category)}
                 >
@@ -209,6 +134,10 @@ const NewArrivals = () => {
             {/* Right Side - Text & CTA */}
             <motion.div 
               className="arrivals-text"
+              initial={{ x: 50, opacity: 0 }}
+              whileInView={{ x: 0, opacity: 1 }}
+              viewport={{ once: true, amount: 0.3 }}
+              transition={{ duration: 0.8, ease: "easeOut" }}
             >
               <div className="text-content">
                 <h2 className="arrivals-title">NEW ARRIVALS</h2>
