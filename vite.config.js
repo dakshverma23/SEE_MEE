@@ -16,13 +16,48 @@ export default defineConfig({
   build: {
     rollupOptions: {
       output: {
-        manualChunks: {
-          'react-vendor': ['react', 'react-dom', 'react-router-dom'],
-          'animation-vendor': ['framer-motion']
+        manualChunks: (id) => {
+          // Vendor chunks
+          if (id.includes('node_modules')) {
+            if (id.includes('react') || id.includes('react-dom') || id.includes('react-router')) {
+              return 'react-vendor'
+            }
+            if (id.includes('framer-motion')) {
+              return 'animation-vendor'
+            }
+            return 'vendor'
+          }
+          
+          // Admin pages in separate chunk
+          if (id.includes('/pages/admin/')) {
+            return 'admin'
+          }
+          
+          // Category pages in separate chunk
+          if (id.includes('/pages/') && (
+            id.includes('AnarkaliPage') || 
+            id.includes('PalazzoPage') || 
+            id.includes('StraightCutPage') || 
+            id.includes('ShararaPage')
+          )) {
+            return 'category-pages'
+          }
+          
+          // Below-the-fold components
+          if (id.includes('/components/') && (
+            id.includes('NewArrivals') ||
+            id.includes('Magazine') ||
+            id.includes('About') ||
+            id.includes('FeaturedCollection')
+          )) {
+            return 'below-fold'
+          }
         }
       }
     },
     chunkSizeWarningLimit: 1000,
-    minify: 'esbuild'
+    minify: 'esbuild',
+    cssCodeSplit: true,
+    sourcemap: false
   }
 })

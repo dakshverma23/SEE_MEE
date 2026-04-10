@@ -1,27 +1,32 @@
-import React, { useState } from 'react'
+import { useState, lazy, Suspense } from 'react'
 import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom'
+// Critical components - loaded immediately (above the fold)
 import Navbar from './components/Navbar'
 import Hero from './components/Hero'
-import NewArrivals from './components/NewArrivals'
-import CategoriesSlider from './components/CategoriesSlider'
-import Fabrics from './components/Categories'
-import FeaturedCollection from './components/FeaturedCollection'
-import Magazine from './components/Magazine'
-import About from './components/About'
 import Footer from './components/Footer'
-import Cart from './components/Cart'
-import Wishlist from './components/Wishlist'
-import Auth from './pages/Auth'
-import Orders from './pages/Orders'
-import AnarkaliPage from './pages/AnarkaliPage'
-import PalazzoPage from './pages/PalazzoPage'
-import StraightCutPage from './pages/StraightCutPage'
-import ShararaPage from './pages/ShararaPage'
-import AdminLogin from './pages/admin/AdminLogin'
-import AdminDashboard from './pages/admin/AdminDashboard'
 import { CartProvider } from './context/CartContext'
 import { AuthProvider } from './context/AuthContext'
 import './App.css'
+
+// Lazy load below-the-fold components
+const NewArrivals = lazy(() => import('./components/NewArrivals'))
+const CategoriesSlider = lazy(() => import('./components/CategoriesSlider'))
+const Fabrics = lazy(() => import('./components/Categories'))
+const FeaturedCollection = lazy(() => import('./components/FeaturedCollection'))
+const Magazine = lazy(() => import('./components/Magazine'))
+const About = lazy(() => import('./components/About'))
+const Cart = lazy(() => import('./components/Cart'))
+const Wishlist = lazy(() => import('./components/Wishlist'))
+
+// Lazy load route pages
+const Auth = lazy(() => import('./pages/Auth'))
+const Orders = lazy(() => import('./pages/Orders'))
+const AnarkaliPage = lazy(() => import('./pages/AnarkaliPage'))
+const PalazzoPage = lazy(() => import('./pages/PalazzoPage'))
+const StraightCutPage = lazy(() => import('./pages/StraightCutPage'))
+const ShararaPage = lazy(() => import('./pages/ShararaPage'))
+const AdminLogin = lazy(() => import('./pages/admin/AdminLogin'))
+const AdminDashboard = lazy(() => import('./pages/admin/AdminDashboard'))
 
 function App() {
   const [isCartOpen, setIsCartOpen] = useState(false)
@@ -35,16 +40,20 @@ function App() {
       />
       <main>
         <Hero />
-        <NewArrivals />
-        <CategoriesSlider />
-        <Fabrics />
-        <FeaturedCollection />
-        <Magazine />
-        <About />
+        <Suspense fallback={<div style={{ minHeight: '400px' }} />}>
+          <NewArrivals />
+          <CategoriesSlider />
+          <Fabrics />
+          <FeaturedCollection />
+          <Magazine />
+          <About />
+        </Suspense>
       </main>
       <Footer />
-      <Cart isOpen={isCartOpen} onClose={() => setIsCartOpen(false)} />
-      <Wishlist isOpen={isWishlistOpen} onClose={() => setIsWishlistOpen(false)} />
+      <Suspense fallback={null}>
+        <Cart isOpen={isCartOpen} onClose={() => setIsCartOpen(false)} />
+        <Wishlist isOpen={isWishlistOpen} onClose={() => setIsWishlistOpen(false)} />
+      </Suspense>
     </>
   )
 
@@ -55,11 +64,15 @@ function App() {
         onWishlistOpen={() => setIsWishlistOpen(true)}
       />
       <main>
-        {children}
+        <Suspense fallback={<div style={{ minHeight: '80vh', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>Loading...</div>}>
+          {children}
+        </Suspense>
       </main>
       <Footer />
-      <Cart isOpen={isCartOpen} onClose={() => setIsCartOpen(false)} />
-      <Wishlist isOpen={isWishlistOpen} onClose={() => setIsWishlistOpen(false)} />
+      <Suspense fallback={null}>
+        <Cart isOpen={isCartOpen} onClose={() => setIsCartOpen(false)} />
+        <Wishlist isOpen={isWishlistOpen} onClose={() => setIsWishlistOpen(false)} />
+      </Suspense>
     </>
   )
 
@@ -68,27 +81,40 @@ function App() {
       <CartProvider>
         <Router>
           <div className="app">
-            <Routes>
-              {/* Admin Routes */}
-              <Route path="/admin" element={<Navigate to="/admin/login" replace />} />
-              <Route path="/admin/login" element={<AdminLogin />} />
-              <Route path="/admin/dashboard" element={<AdminDashboard />} />
-              
-              {/* Auth Page */}
-              <Route path="/auth" element={<Auth />} />
-              
-              {/* Orders Page */}
-              <Route path="/orders" element={<Orders />} />
+            <Suspense fallback={
+              <div style={{ 
+                minHeight: '100vh', 
+                display: 'flex', 
+                alignItems: 'center', 
+                justifyContent: 'center',
+                fontFamily: 'var(--font-body)',
+                color: 'var(--charcoal)'
+              }}>
+                Loading...
+              </div>
+            }>
+              <Routes>
+                {/* Admin Routes */}
+                <Route path="/admin" element={<Navigate to="/admin/login" replace />} />
+                <Route path="/admin/login" element={<AdminLogin />} />
+                <Route path="/admin/dashboard" element={<AdminDashboard />} />
+                
+                {/* Auth Page */}
+                <Route path="/auth" element={<Auth />} />
+                
+                {/* Orders Page */}
+                <Route path="/orders" element={<Orders />} />
 
-              {/* Category Pages */}
-              <Route path="/category/anarkali" element={<PageWithNav><AnarkaliPage /></PageWithNav>} />
-              <Route path="/category/palazzo" element={<PageWithNav><PalazzoPage /></PageWithNav>} />
-              <Route path="/category/straight-cut" element={<PageWithNav><StraightCutPage /></PageWithNav>} />
-              <Route path="/category/sharara" element={<PageWithNav><ShararaPage /></PageWithNav>} />
+                {/* Category Pages */}
+                <Route path="/category/anarkali" element={<PageWithNav><AnarkaliPage /></PageWithNav>} />
+                <Route path="/category/palazzo" element={<PageWithNav><PalazzoPage /></PageWithNav>} />
+                <Route path="/category/straight-cut" element={<PageWithNav><StraightCutPage /></PageWithNav>} />
+                <Route path="/category/sharara" element={<PageWithNav><ShararaPage /></PageWithNav>} />
 
-              {/* Home Page */}
-              <Route path="/*" element={<HomePage />} />
-            </Routes>
+                {/* Home Page */}
+                <Route path="/*" element={<HomePage />} />
+              </Routes>
+            </Suspense>
           </div>
         </Router>
       </CartProvider>

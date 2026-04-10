@@ -4,11 +4,7 @@ import { getOptimizedImageUrl } from '../utils/imageHelper'
 import './Hero.css'
 
 const Hero = () => {
-  const [thumbnails, setThumbnails] = useState([])
-  const [activeIndex, setActiveIndex] = useState(0)
-  const [loading, setLoading] = useState(true)
-
-  // Default fallback images
+  // Default fallback images - shown immediately
   const defaultThumbnails = [
     { img: '/images/coll_1_NBG.png', category: 'Anarkali', desc: 'Timeless Grace' },
     { img: '/images/coll2_NBG.jpg', category: 'Anarkali', desc: 'Contemporary Elegance' },
@@ -17,8 +13,16 @@ const Hero = () => {
     { img: '/images/coll5_NBG.png', category: 'Sharara', desc: 'Regal Charm' }
   ]
 
+  const [thumbnails, setThumbnails] = useState(defaultThumbnails)
+  const [activeIndex, setActiveIndex] = useState(0)
+
   useEffect(() => {
-    fetchCarouselImages()
+    // Defer API call to not block initial render
+    const timer = setTimeout(() => {
+      fetchCarouselImages()
+    }, 100)
+    
+    return () => clearTimeout(timer)
   }, [])
 
   const fetchCarouselImages = async () => {
@@ -34,16 +38,10 @@ const Hero = () => {
           desc: item.subtitle || 'Elegant Collection'
         }))
         setThumbnails(carouselData)
-      } else {
-        // Use fallback images
-        setThumbnails(defaultThumbnails)
       }
     } catch (error) {
       console.error('Error fetching carousel images:', error)
-      // Use fallback images on error
-      setThumbnails(defaultThumbnails)
-    } finally {
-      setLoading(false)
+      // Keep using fallback images on error
     }
   }
 
@@ -81,16 +79,6 @@ const Hero = () => {
 
     return () => clearInterval(interval)
   }, [thumbnails.length])
-
-  if (loading) {
-    return (
-      <section className="hero-jewelry" id="home">
-        <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', height: '100vh' }}>
-          <p>Loading...</p>
-        </div>
-      </section>
-    )
-  }
 
   return (
     <section className="hero-jewelry" id="home">
