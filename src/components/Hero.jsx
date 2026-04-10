@@ -37,11 +37,11 @@ const Hero = () => {
     return diff
   }
 
-  // Auto-slideshow every 3 seconds
+  // Auto-slideshow every 5 seconds
   useEffect(() => {
     const interval = setInterval(() => {
       setActiveIndex((prev) => (prev + 1) % thumbnails.length)
-    }, 3000)
+    }, 5000)
 
     return () => clearInterval(interval)
   }, [thumbnails.length])
@@ -100,8 +100,8 @@ const Hero = () => {
                 opacity: Math.abs(position) > 2 ? 0 : 1
               }}
               transition={{
-                duration: 1.8,
-                ease: [0.25, 0.46, 0.45, 0.94]
+                duration: 2.5,
+                ease: [0.4, 0, 0.2, 1]
               }}
               onClick={() => position !== 0 && setActiveIndex(idx)}
             >
