@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
 import { useAuth } from '../context/AuthContext'
 import { useNavigate } from 'react-router-dom'
@@ -6,6 +6,7 @@ import './Auth.css'
 
 const Auth = () => {
   const [isLogin, setIsLogin] = useState(true)
+  const [logo, setLogo] = useState('/images/logoSEEMEE1.png')
   const [formData, setFormData] = useState({
     name: '',
     email: '',
@@ -17,6 +18,18 @@ const Auth = () => {
   
   const { login, signup } = useAuth()
   const navigate = useNavigate()
+
+  useEffect(() => {
+    // Fetch logo from API
+    fetch('/api/site-settings')
+      .then(res => res.json())
+      .then(data => {
+        if (data.success && data.data.logo) {
+          setLogo(data.data.logo)
+        }
+      })
+      .catch(err => console.error('Error fetching logo:', err))
+  }, [])
 
   const handleChange = (e) => {
     setFormData({
@@ -92,7 +105,7 @@ const Auth = () => {
         transition={{ duration: 0.6 }}
       >
         <div className="auth-logo">
-          <img src="/images/logoSEEMEE1.png" alt="See Mee Logo" />
+          <img src={logo} alt="See Mee Logo" />
         </div>
 
         <motion.div 

@@ -1,12 +1,24 @@
-import React, { useEffect, useRef } from 'react'
+import React, { useEffect, useState } from 'react'
 import { motion } from 'framer-motion'
 import './About.css'
 
 const About = () => {
-  const sectionRef = useRef(null)
+  const [aboutImage, setAboutImage] = useState('/images/about.jpg')
+
+  useEffect(() => {
+    // Fetch about image from API
+    fetch('/api/site-settings')
+      .then(res => res.json())
+      .then(data => {
+        if (data.success && data.data.aboutImage) {
+          setAboutImage(data.data.aboutImage)
+        }
+      })
+      .catch(err => console.error('Error fetching about image:', err))
+  }, [])
 
   return (
-    <section className="about ornamental-pattern" id="about" ref={sectionRef}>
+    <section className="about ornamental-pattern" id="about">
       <div className="about-container">
         <motion.div 
           className="about-image"
@@ -17,7 +29,7 @@ const About = () => {
         >
           <div className="image-frame">
             <div className="about-placeholder">
-              <img src="/images/about.jpg" alt="About See Mee" />
+              <img src={aboutImage} alt="About See Mee" />
             </div>
           </div>
         </motion.div>

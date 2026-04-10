@@ -8,6 +8,7 @@ import OrdersManager from './components/OrdersManager'
 import CollectionManager from './components/CollectionManager'
 import MagazineManager from './components/MagazineManager'
 import CarouselManager from './components/CarouselManager'
+import SiteSettingsManager from './components/SiteSettingsManager'
 
 const AdminDashboard = () => {
   const [activeTab, setActiveTab] = useState('overview')
@@ -145,6 +146,17 @@ const AdminDashboard = () => {
           </button>
 
           <button 
+            className={activeTab === 'site-settings' ? 'active' : ''}
+            onClick={() => setActiveTab('site-settings')}
+          >
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor">
+              <circle cx="12" cy="12" r="3"/>
+              <path d="M12 1v6m0 6v6m-9-9h6m6 0h6"/>
+            </svg>
+            Site Settings
+          </button>
+
+          <button 
             className={activeTab === 'orders' ? 'active' : ''}
             onClick={() => setActiveTab('orders')}
           >
@@ -242,6 +254,7 @@ const AdminDashboard = () => {
         {activeTab === 'collection' && <CollectionManager />}
         {activeTab === 'magazine' && <MagazineManager />}
         {activeTab === 'carousel' && <CarouselManager />}
+        {activeTab === 'site-settings' && <SiteSettingsManager />}
         {activeTab === 'orders' && <OrdersManager />}
       </main>
     </div>

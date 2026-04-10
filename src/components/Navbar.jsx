@@ -9,9 +9,22 @@ const Navbar = ({ onCartOpen, onWishlistOpen }) => {
   const [scrolled, setScrolled] = useState(false)
   const [menuOpen, setMenuOpen] = useState(false)
   const [profileMenuOpen, setProfileMenuOpen] = useState(false)
+  const [logo, setLogo] = useState('/images/logoSEEMEE1.png')
   const { getCartCount, getWishlistCount } = useCart()
   const { user, isAuthenticated, logout } = useAuth()
   const navigate = useNavigate()
+
+  useEffect(() => {
+    // Fetch logo from API
+    fetch('/api/site-settings')
+      .then(res => res.json())
+      .then(data => {
+        if (data.success && data.data.logo) {
+          setLogo(data.data.logo)
+        }
+      })
+      .catch(err => console.error('Error fetching logo:', err))
+  }, [])
 
   useEffect(() => {
     const handleScroll = () => {
@@ -61,7 +74,7 @@ const Navbar = ({ onCartOpen, onWishlistOpen }) => {
           onClick={() => navigate('/')}
           style={{ cursor: 'pointer' }}
         >
-          <img src="/images/logoSEEMEE1.png" alt="See Mee Logo" className="logo-image" />
+          <img src={logo} alt="See Mee Logo" className="logo-image" />
         </motion.div>
 
         {/* Navigation Links - Only visible when scrolled */}

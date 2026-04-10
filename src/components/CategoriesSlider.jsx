@@ -3,48 +3,63 @@ import { motion, AnimatePresence } from 'framer-motion'
 import { useNavigate } from 'react-router-dom'
 import './CategoriesSlider.css'
 
-const categories = [
-  {
-    id: 1,
-    title: 'Anarkali Suits',
-    slug: 'anarkali',
-    subtitle: 'Timeless Elegance',
-    description: 'Experience the grace of flowing silhouettes with our exquisite Anarkali collection. Perfect for weddings, festivals, and special occasions, these suits blend traditional craftsmanship with contemporary designs.',
-    features: ['Flowing Silhouette', 'Intricate Embroidery', 'Premium Fabrics'],
-    image: 'categories_anarkali.jpg'
-  },
-  {
-    id: 2,
-    title: 'Palazzo Suits',
-    slug: 'palazzo',
-    subtitle: 'Contemporary Comfort',
-    description: 'Discover the perfect fusion of style and comfort with our Palazzo suits. Featuring wide-leg pants and elegant kurtas, these outfits are ideal for both casual gatherings and formal events.',
-    features: ['Wide-Leg Comfort', 'Versatile Styling', 'Modern Appeal'],
-    image: 'categories_plazzo.jpg'
-  },
-  {
-    id: 3,
-    title: 'Straight Cut Suits',
-    slug: 'straight-cut',
-    subtitle: 'Classic Sophistication',
-    description: 'Embrace timeless elegance with our Straight Cut collection. These suits offer a sleek, sophisticated look that works beautifully for office wear, parties, and everyday occasions.',
-    features: ['Sleek Design', 'Easy to Wear', 'Versatile Choice'],
-    image: 'categories_straight.jpg'
-  },
-  {
-    id: 4,
-    title: 'Sharara Suits',
-    slug: 'sharara',
-    subtitle: 'Regal Grandeur',
-    description: 'Make a statement with our stunning Sharara suits. Featuring flared pants and ornate detailing, these outfits bring royal elegance to weddings, celebrations, and festive occasions.',
-    features: ['Flared Elegance', 'Rich Embellishments', 'Festive Appeal'],
-    image: 'categories_sharara.jpg'
-  }
-]
-
 const CategoriesSlider = () => {
   const [activeIndex, setActiveIndex] = useState(0)
+  const [categories, setCategories] = useState([
+    {
+      id: 1,
+      title: 'Anarkali Suits',
+      slug: 'anarkali',
+      subtitle: 'Timeless Elegance',
+      description: 'Experience the grace of flowing silhouettes with our exquisite Anarkali collection. Perfect for weddings, festivals, and special occasions, these suits blend traditional craftsmanship with contemporary designs.',
+      features: ['Flowing Silhouette', 'Intricate Embroidery', 'Premium Fabrics'],
+      image: 'categories_anarkali.jpg',
+      order: 0
+    },
+    {
+      id: 2,
+      title: 'Palazzo Suits',
+      slug: 'palazzo',
+      subtitle: 'Contemporary Comfort',
+      description: 'Discover the perfect fusion of style and comfort with our Palazzo suits. Featuring wide-leg pants and elegant kurtas, these outfits are ideal for both casual gatherings and formal events.',
+      features: ['Wide-Leg Comfort', 'Versatile Styling', 'Modern Appeal'],
+      image: 'categories_plazzo.jpg',
+      order: 1
+    },
+    {
+      id: 3,
+      title: 'Straight Cut Suits',
+      slug: 'straight-cut',
+      subtitle: 'Classic Sophistication',
+      description: 'Embrace timeless elegance with our Straight Cut collection. These suits offer a sleek, sophisticated look that works beautifully for office wear, parties, and everyday occasions.',
+      features: ['Sleek Design', 'Easy to Wear', 'Versatile Choice'],
+      image: 'categories_straight.jpg',
+      order: 2
+    },
+    {
+      id: 4,
+      title: 'Sharara Suits',
+      slug: 'sharara',
+      subtitle: 'Regal Grandeur',
+      description: 'Make a statement with our stunning Sharara suits. Featuring flared pants and ornate detailing, these outfits bring royal elegance to weddings, celebrations, and festive occasions.',
+      features: ['Flared Elegance', 'Rich Embellishments', 'Festive Appeal'],
+      image: 'categories_sharara.jpg',
+      order: 3
+    }
+  ])
   const navigate = useNavigate()
+
+  useEffect(() => {
+    // Fetch category slides from API
+    fetch('/api/site-settings')
+      .then(res => res.json())
+      .then(data => {
+        if (data.success && data.data.categorySlides && data.data.categorySlides.length > 0) {
+          setCategories(data.data.categorySlides.sort((a, b) => a.order - b.order))
+        }
+      })
+      .catch(err => console.error('Error fetching category slides:', err))
+  }, [])
 
   useEffect(() => {
     const interval = setInterval(() => {
@@ -95,7 +110,7 @@ const CategoriesSlider = () => {
             >
               <div className="slider-image-wrapper">
                 <img 
-                  src={`/images/${activeCategory.image}`} 
+                  src={activeCategory.image} 
                   alt={activeCategory.title}
                 />
               </div>
