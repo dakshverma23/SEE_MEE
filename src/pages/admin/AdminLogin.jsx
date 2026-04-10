@@ -36,15 +36,19 @@ const AdminLogin = () => {
         localStorage.setItem('adminToken', data.token)
         localStorage.setItem('adminUser', JSON.stringify(data.user))
         
-        // Open admin panel in new tab
-        window.open('/admin/dashboard', '_blank')
+        // Try to open admin panel in new tab
+        const newTab = window.open('/admin/dashboard', '_blank')
         
-        // Show success message and stay on login page
-        setError('')
-        alert('✅ Admin panel opened in new tab!')
-        
-        // Clear form
-        setCredentials({ email: '', password: '' })
+        // If popup was blocked, navigate in same tab
+        if (!newTab || newTab.closed || typeof newTab.closed === 'undefined') {
+          // Popup blocked - navigate in same tab
+          navigate('/admin/dashboard')
+        } else {
+          // Popup opened successfully - show message and clear form
+          setError('')
+          alert('✅ Admin panel opened in new tab!')
+          setCredentials({ email: '', password: '' })
+        }
       } else {
         setError(data.user?.role !== 'admin' ? 'Access denied. Admin privileges required.' : 'Invalid admin credentials')
       }
