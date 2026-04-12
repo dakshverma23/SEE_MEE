@@ -83,8 +83,8 @@ const NewArrivals = () => {
                   <div className="arrival-image-placeholder">
                     {!imageErrors[arrival.id] ? (
                       <img 
-                        src={arrival.imagePath} 
-                        alt={arrival.alt}
+                        src={arrival.imagePath || arrival.image} 
+                        alt={arrival.alt || arrival.category || 'New Arrival'}
                         onError={() => handleImageError(arrival.id)}
                       />
                     ) : (
