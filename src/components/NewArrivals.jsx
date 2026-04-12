@@ -11,6 +11,13 @@ const NewArrivals = () => {
   const [bannerRef, bannerInView] = useInView({ once: true, threshold: 0.3 })
   const [textRef, textInView] = useInView({ once: true, threshold: 0.3 })
 
+  // Category display names
+  const categoryLabels = {
+    'anarkali': 'Anarkali Suit',
+    'palazzo': 'Palazzo Suit',
+    'straight-cut': 'Straight Cut Suit'
+  }
+
   useEffect(() => {
     fetchArrivals()
   }, [])
@@ -21,7 +28,15 @@ const NewArrivals = () => {
       const data = await response.json()
       
       if (data.success && data.data.length > 0) {
-        setArrivals(data.data)
+        // Transform data to include display properties
+        const transformedArrivals = data.data.map(item => ({
+          id: item._id,
+          category: item.category,
+          image: item.image,
+          alt: categoryLabels[item.category] || item.category,
+          fallbackText: categoryLabels[item.category] || item.category
+        }))
+        setArrivals(transformedArrivals)
       }
     } catch (error) {
       console.error('Error fetching arrivals:', error)
@@ -84,10 +99,10 @@ const NewArrivals = () => {
                   onClick={() => handleCategoryClick(arrival.category)}
                 >
                   <div className="arrival-image-placeholder">
-                    {!imageErrors[arrival.id] ? (
+                    {arrival.image && !imageErrors[arrival.id] ? (
                       <img 
-                        src={arrival.imagePath || arrival.image} 
-                        alt={arrival.alt || arrival.category || 'New Arrival'}
+                        src={arrival.image} 
+                        alt={arrival.alt}
                         onError={() => handleImageError(arrival.id)}
                       />
                     ) : (
@@ -98,7 +113,7 @@ const NewArrivals = () => {
                           <polyline points="21 15 16 10 5 21"/>
                         </svg>
                         <span>{arrival.fallbackText}</span>
-                        <span className="upload-instruction">Upload Image</span>
+                        <span className="upload-instruction">Upload Image in Admin Panel</span>
                       </div>
                     )}
                   </div>

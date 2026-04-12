@@ -4,12 +4,12 @@ import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-d
 import Navbar from './components/Navbar'
 import Hero from './components/Hero'
 import Footer from './components/Footer'
+import NewArrivals from './components/NewArrivals'
 import { CartProvider } from './context/CartContext'
 import { AuthProvider } from './context/AuthContext'
 import './App.css'
 
 // Lazy load below-the-fold components
-const NewArrivals = lazy(() => import('./components/NewArrivals'))
 const CategoriesSlider = lazy(() => import('./components/CategoriesSlider'))
 const Fabrics = lazy(() => import('./components/Categories'))
 const FeaturedCollection = lazy(() => import('./components/FeaturedCollection'))
@@ -40,8 +40,8 @@ function App() {
       />
       <main>
         <Hero />
+        <NewArrivals />
         <Suspense fallback={<div style={{ minHeight: '400px' }} />}>
-          <NewArrivals />
           <CategoriesSlider />
           <Fabrics />
           <FeaturedCollection />
