@@ -1,11 +1,13 @@
-import React, { useContext, useEffect, useState } from 'react'
+import { useContext, useEffect, useState } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
+import { useNavigate } from 'react-router-dom'
 import { useInView } from '../hooks/useInView'
 import { CartContext } from '../context/CartContext'
 import { getOptimizedImageUrl } from '../utils/imageHelper'
 import './FeaturedCollection.css'
 
 const FeaturedCollection = () => {
+  const navigate = useNavigate()
   const { addToCart, toggleWishlist, isInWishlist } = useContext(CartContext)
   const [products, setProducts] = useState([])
   const [loading, setLoading] = useState(true)
@@ -313,6 +315,7 @@ const FeaturedCollection = () => {
         >
           <motion.button 
             className="explore-btn"
+            onClick={() => navigate('/collections')}
             whileHover={{ scale: 1.05, boxShadow: "0 20px 60px rgba(249, 102, 53, 0.3)" }}
             whileTap={{ scale: 0.98 }}
           >

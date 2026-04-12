@@ -1,9 +1,11 @@
 import { useState, useEffect } from 'react'
 import { motion } from 'framer-motion'
+import { useNavigate } from 'react-router-dom'
 import { getOptimizedImageUrl } from '../utils/imageHelper'
 import './NewArrivals.css'
 
 const NewArrivals = () => {
+  const navigate = useNavigate()
   const [arrivals, setArrivals] = useState([])
   const [imageErrors, setImageErrors] = useState({})
   const [loading, setLoading] = useState(true)
@@ -140,9 +142,9 @@ const NewArrivals = () => {
                   className="shop-arrivals-btn"
                   whileHover={{ scale: 1.05 }}
                   whileTap={{ scale: 0.95 }}
-                  onClick={() => handleCategoryClick('all')}
+                  onClick={() => navigate('/new-arrivals')}
                 >
-                  Shop New Arrivals Now
+                  Explore New Arrivals
                 </motion.button>
               </div>
             </motion.div>

@@ -1,15 +1,14 @@
 import { useState, useEffect } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
-import { useInView } from '../hooks/useInView'
+import { useNavigate } from 'react-router-dom'
 import { getImageUrl } from '../utils/imageHelper'
 import './Magazine.css'
 
 const Magazine = () => {
+  const navigate = useNavigate()
   const [currentIndex, setCurrentIndex] = useState(0)
   const [magazineStories, setMagazineStories] = useState([])
   const [loading, setLoading] = useState(true)
-  
-  const [headerRef, headerInView] = useInView({ once: true, threshold: 0.3 })
 
   useEffect(() => {
     fetchMagazineStories()
@@ -67,15 +66,23 @@ const Magazine = () => {
     <section className="magazine-section" id="magazine">
       <div className="magazine-container">
         <motion.div 
-          ref={headerRef}
           className="magazine-header"
           initial={{ opacity: 0, y: 30 }}
-          animate={headerInView ? { opacity: 1, y: 0 } : { opacity: 0, y: 30 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true, amount: 0.3 }}
           transition={{ duration: 0.8 }}
         >
           <span className="magazine-subtitle">Our Story</span>
           <h2 className="magazine-title">Magazine</h2>
           <div className="magazine-underline"></div>
+          <motion.button
+            className="view-all-magazine-btn"
+            onClick={() => navigate('/magazine')}
+            whileHover={{ scale: 1.05 }}
+            whileTap={{ scale: 0.95 }}
+          >
+            View All Stories
+          </motion.button>
         </motion.div>
 
         <div className="magazine-slideshow-container">

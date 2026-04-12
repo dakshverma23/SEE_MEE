@@ -21,6 +21,9 @@ const Wishlist = lazy(() => import('./components/Wishlist'))
 // Lazy load route pages
 const Auth = lazy(() => import('./pages/Auth'))
 const Orders = lazy(() => import('./pages/Orders'))
+const MagazinePage = lazy(() => import('./pages/MagazinePage'))
+const CollectionsPage = lazy(() => import('./pages/CollectionsPage'))
+const NewArrivalsPage = lazy(() => import('./pages/NewArrivalsPage'))
 const AnarkaliPage = lazy(() => import('./pages/AnarkaliPage'))
 const PalazzoPage = lazy(() => import('./pages/PalazzoPage'))
 const StraightCutPage = lazy(() => import('./pages/StraightCutPage'))
@@ -109,6 +112,15 @@ function App() {
                 
                 {/* Orders Page */}
                 <Route path="/orders" element={<Orders />} />
+
+                {/* Magazine Page */}
+                <Route path="/magazine" element={<PageWithNav><MagazinePage /></PageWithNav>} />
+
+                {/* Collections Page */}
+                <Route path="/collections" element={<PageWithNav><CollectionsPage /></PageWithNav>} />
+
+                {/* New Arrivals Page */}
+                <Route path="/new-arrivals" element={<PageWithNav><NewArrivalsPage /></PageWithNav>} />
 
                 {/* Category Pages */}
                 <Route path="/category/anarkali" element={<PageWithNav><AnarkaliPage /></PageWithNav>} />

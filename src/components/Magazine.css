@@ -439,3 +439,25 @@
     font-size: 0.85rem;
   }
 }
+
+
+/* View All Button */
+.view-all-magazine-btn {
+  margin-top: 20px;
+  padding: 12px 35px;
+  background: var(--primary-gold);
+  color: var(--charcoal);
+  border: none;
+  border-radius: 30px;
+  font-family: var(--font-body);
+  font-size: 1rem;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  letter-spacing: 1px;
+}
+
+.view-all-magazine-btn:hover {
+  background: var(--dark-gold);
+  box-shadow: 0 5px 20px rgba(212, 175, 55, 0.4);
+}
