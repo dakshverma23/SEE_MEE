@@ -1,6 +1,5 @@
 import { useState, useEffect } from 'react'
 import { motion } from 'framer-motion'
-import { useInView } from '../hooks/useInView'
 import { getOptimizedImageUrl } from '../utils/imageHelper'
 import './NewArrivals.css'
 
@@ -8,9 +7,6 @@ const NewArrivals = () => {
   const [arrivals, setArrivals] = useState([])
   const [imageErrors, setImageErrors] = useState({})
   const [loading, setLoading] = useState(true)
-  
-  const [bannerRef, bannerInView] = useInView({ once: true, threshold: 0.3 })
-  const [textRef, textInView] = useInView({ once: true, threshold: 0.3 })
 
   // Category display names
   const categoryLabels = {
@@ -50,14 +46,18 @@ const NewArrivals = () => {
     setImageErrors(prev => ({ ...prev, [id]: true }))
   }
 
-  const handleCategoryClick = (category) => {
+  const handleCategoryClick = () => {
     const element = document.getElementById('categories')
     if (element) {
       element.scrollIntoView({ behavior: 'smooth' })
     }
   }
-
-  if (loading || arrivals.length === 0) {
+  
+  if (loading) {
+    return null
+  }
+  
+  if (arrivals.length === 0) {
     return null
   }
 
@@ -65,10 +65,10 @@ const NewArrivals = () => {
     <section className="new-arrivals" id="new-arrivals">
       <div className="new-arrivals-container">
         <motion.div 
-          ref={bannerRef}
           className="arrivals-banner"
           initial={{ scale: 0.95, opacity: 0 }}
-          animate={bannerInView ? { scale: 1, opacity: 1 } : { scale: 0.95, opacity: 0 }}
+          whileInView={{ scale: 1, opacity: 1 }}
+          viewport={{ once: true, amount: 0.3 }}
           transition={{ duration: 0.8, ease: "easeOut" }}
         >
           {/* Decorative Border Frame */}
@@ -94,7 +94,8 @@ const NewArrivals = () => {
                   key={arrival.id}
                   className="arrival-image-wrapper"
                   initial={{ x: -50, opacity: 0 }}
-                  animate={bannerInView ? { x: 0, opacity: 1 } : { x: -50, opacity: 0 }}
+                  whileInView={{ x: 0, opacity: 1 }}
+                  viewport={{ once: true }}
                   transition={{ duration: 0.6, delay: index * 0.1 }}
                   whileHover={{ scale: 1.05, y: -10 }}
                   onClick={() => handleCategoryClick(arrival.category)}
@@ -127,10 +128,10 @@ const NewArrivals = () => {
 
             {/* Right Side - Text & CTA */}
             <motion.div 
-              ref={textRef}
               className="arrivals-text"
               initial={{ x: 50, opacity: 0 }}
-              animate={textInView ? { x: 0, opacity: 1 } : { x: 50, opacity: 0 }}
+              whileInView={{ x: 0, opacity: 1 }}
+              viewport={{ once: true }}
               transition={{ duration: 0.8, ease: "easeOut" }}
             >
               <div className="text-content">
