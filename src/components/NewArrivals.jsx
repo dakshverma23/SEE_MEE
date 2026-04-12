@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react'
 import { motion } from 'framer-motion'
 import { useInView } from '../hooks/useInView'
+import { getOptimizedImageUrl } from '../utils/imageHelper'
 import './NewArrivals.css'
 
 const NewArrivals = () => {
@@ -101,7 +102,7 @@ const NewArrivals = () => {
                   <div className="arrival-image-placeholder">
                     {arrival.image && !imageErrors[arrival.id] ? (
                       <img 
-                        src={arrival.image} 
+                        src={getOptimizedImageUrl(arrival.image, 'product')} 
                         alt={arrival.alt}
                         onError={() => handleImageError(arrival.id)}
                       />
