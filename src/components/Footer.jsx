@@ -1,17 +1,23 @@
 import React from 'react'
 import { motion } from 'framer-motion'
+import { useInView } from '../hooks/useInView'
 import './Footer.css'
 
 const Footer = () => {
+  const [section1Ref, section1InView] = useInView({ once: true })
+  const [section2Ref, section2InView] = useInView({ once: true })
+  const [section3Ref, section3InView] = useInView({ once: true })
+  const [section4Ref, section4InView] = useInView({ once: true })
+  
   return (
     <footer className="footer" id="contact">
       <div className="footer-container">
         <div className="footer-content">
           <motion.div 
+            ref={section1Ref}
             className="footer-section"
             initial={{ opacity: 0, y: 20 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
+            animate={section1InView ? { opacity: 1, y: 0 } : { opacity: 0, y: 20 }}
             transition={{ duration: 0.6 }}
           >
             <div className="footer-logo">
@@ -47,10 +53,10 @@ const Footer = () => {
           </motion.div>
 
           <motion.div 
+            ref={section2Ref}
             className="footer-section"
             initial={{ opacity: 0, y: 20 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
+            animate={section2InView ? { opacity: 1, y: 0 } : { opacity: 0, y: 20 }}
             transition={{ duration: 0.6, delay: 0.1 }}
           >
             <h3 className="footer-title">Quick Links</h3>
@@ -63,10 +69,10 @@ const Footer = () => {
           </motion.div>
 
           <motion.div 
+            ref={section3Ref}
             className="footer-section"
             initial={{ opacity: 0, y: 20 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
+            animate={section3InView ? { opacity: 1, y: 0 } : { opacity: 0, y: 20 }}
             transition={{ duration: 0.6, delay: 0.2 }}
           >
             <h3 className="footer-title">Customer Care</h3>
@@ -79,10 +85,10 @@ const Footer = () => {
           </motion.div>
 
           <motion.div 
+            ref={section4Ref}
             className="footer-section"
             initial={{ opacity: 0, y: 20 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
+            animate={section4InView ? { opacity: 1, y: 0 } : { opacity: 0, y: 20 }}
             transition={{ duration: 0.6, delay: 0.3 }}
           >
             <h3 className="footer-title">Newsletter</h3>

@@ -1,10 +1,17 @@
 import { useEffect, useState } from 'react'
 import { motion } from 'framer-motion'
+import { useInView } from '../hooks/useInView'
 import './About.css'
 
 const About = () => {
   const [aboutImage, setAboutImage] = useState(null)
   const [loading, setLoading] = useState(true)
+  
+  const [imageRef, imageInView] = useInView({ once: true, threshold: 0.3 })
+  const [contentRef, contentInView] = useInView({ once: true, threshold: 0.3 })
+  const [feature1Ref, feature1InView] = useInView({ once: true, threshold: 0.3 })
+  const [feature2Ref, feature2InView] = useInView({ once: true, threshold: 0.3 })
+  const [feature3Ref, feature3InView] = useInView({ once: true, threshold: 0.3 })
 
   useEffect(() => {
     // Fetch about image from API
@@ -26,10 +33,10 @@ const About = () => {
     <section className="about ornamental-pattern" id="about">
       <div className="about-container">
         <motion.div 
+          ref={imageRef}
           className="about-image"
           initial={{ x: -80, opacity: 0 }}
-          whileInView={{ x: 0, opacity: 1 }}
-          viewport={{ once: true, amount: 0.3 }}
+          animate={imageInView ? { x: 0, opacity: 1 } : { x: -80, opacity: 0 }}
           transition={{ duration: 0.8, ease: "easeOut" }}
         >
           <div className="image-frame">
@@ -54,10 +61,10 @@ const About = () => {
         </motion.div>
 
         <motion.div 
+          ref={contentRef}
           className="about-content"
           initial={{ x: 80, opacity: 0 }}
-          whileInView={{ x: 0, opacity: 1 }}
-          viewport={{ once: true, amount: 0.3 }}
+          animate={contentInView ? { x: 0, opacity: 1 } : { x: 80, opacity: 0 }}
           transition={{ duration: 0.8, ease: "easeOut" }}
         >
           <span className="section-subtitle">Our Story</span>
@@ -77,10 +84,10 @@ const About = () => {
 
           <div className="about-features">
             <motion.div 
+              ref={feature1Ref}
               className="feature"
               initial={{ y: 40, opacity: 0 }}
-              whileInView={{ y: 0, opacity: 1 }}
-              viewport={{ once: true, amount: 0.3 }}
+              animate={feature1InView ? { y: 0, opacity: 1 } : { y: 40, opacity: 0 }}
               transition={{ duration: 0.6, delay: 0.1 }}
               whileHover={{ scale: 1.05 }}
             >
@@ -95,10 +102,10 @@ const About = () => {
             </motion.div>
 
             <motion.div 
+              ref={feature2Ref}
               className="feature"
               initial={{ y: 40, opacity: 0 }}
-              whileInView={{ y: 0, opacity: 1 }}
-              viewport={{ once: true, amount: 0.3 }}
+              animate={feature2InView ? { y: 0, opacity: 1 } : { y: 40, opacity: 0 }}
               transition={{ duration: 0.6, delay: 0.2 }}
               whileHover={{ scale: 1.05 }}
             >
@@ -112,10 +119,10 @@ const About = () => {
             </motion.div>
 
             <motion.div 
+              ref={feature3Ref}
               className="feature"
               initial={{ y: 40, opacity: 0 }}
-              whileInView={{ y: 0, opacity: 1 }}
-              viewport={{ once: true, amount: 0.3 }}
+              animate={feature3InView ? { y: 0, opacity: 1 } : { y: 40, opacity: 0 }}
               transition={{ duration: 0.6, delay: 0.3 }}
               whileHover={{ scale: 1.05 }}
             >

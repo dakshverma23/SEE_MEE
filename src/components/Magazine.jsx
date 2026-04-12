@@ -1,5 +1,6 @@
 import { useState, useEffect } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
+import { useInView } from '../hooks/useInView'
 import { getImageUrl } from '../utils/imageHelper'
 import './Magazine.css'
 
@@ -7,6 +8,8 @@ const Magazine = () => {
   const [currentIndex, setCurrentIndex] = useState(0)
   const [magazineStories, setMagazineStories] = useState([])
   const [loading, setLoading] = useState(true)
+  
+  const [headerRef, headerInView] = useInView({ once: true, threshold: 0.3 })
 
   useEffect(() => {
     fetchMagazineStories()
@@ -64,10 +67,10 @@ const Magazine = () => {
     <section className="magazine-section" id="magazine">
       <div className="magazine-container">
         <motion.div 
+          ref={headerRef}
           className="magazine-header"
           initial={{ opacity: 0, y: 30 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true }}
+          animate={headerInView ? { opacity: 1, y: 0 } : { opacity: 0, y: 30 }}
           transition={{ duration: 0.8 }}
         >
           <span className="magazine-subtitle">Our Story</span>

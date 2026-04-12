@@ -1,5 +1,6 @@
 import React, { useContext, useEffect, useState } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
+import { useInView } from '../hooks/useInView'
 import { CartContext } from '../context/CartContext'
 import { getOptimizedImageUrl } from '../utils/imageHelper'
 import './FeaturedCollection.css'
@@ -11,6 +12,8 @@ const FeaturedCollection = () => {
   const [currentIndex, setCurrentIndex] = useState(0)
   const [direction, setDirection] = useState(0)
   const [itemsPerView, setItemsPerView] = useState(3)
+  
+  const [headerRef, headerInView] = useInView({ once: true, threshold: 0.3 })
 
   // Fetch featured products from API
   useEffect(() => {
@@ -120,10 +123,10 @@ const FeaturedCollection = () => {
     <section className="featured-collection" id="featured-collection">
       <div className="featured-collection-container">
         <motion.div 
+          ref={headerRef}
           className="collection-header"
           initial={{ opacity: 0, y: 40 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true, amount: 0.3 }}
+          animate={headerInView ? { opacity: 1, y: 0 } : { opacity: 0, y: 40 }}
           transition={{ duration: 0.8 }}
         >
           <span className="collection-subtitle">Handpicked For You</span>
