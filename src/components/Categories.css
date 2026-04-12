@@ -177,3 +177,174 @@
   }
 }
 
+
+/* ============================================
+   MOBILE RESPONSIVE STYLES
+   ============================================ */
+
+/* Tablet (1024px and below) */
+@media (max-width: 1024px) {
+  .fabrics-container {
+    padding: 3rem 2rem;
+  }
+  
+  .fabrics-title {
+    font-size: 2.5rem;
+  }
+  
+  .fabric-circle {
+    width: 180px;
+    height: 180px;
+  }
+  
+  .fabric-info-box {
+    max-width: 400px;
+  }
+}
+
+/* Tablet Portrait (768px and below) */
+@media (max-width: 768px) {
+  .fabrics-section {
+    padding: 3rem 1.5rem;
+  }
+  
+  .fabrics-container {
+    padding: 2rem 1rem;
+  }
+  
+  .fabrics-title {
+    font-size: 2rem;
+    margin-bottom: 2rem;
+  }
+  
+  .fabrics-grid {
+    gap: 2rem;
+  }
+  
+  .fabric-item {
+    flex-direction: column !important;
+    align-items: center;
+    text-align: center;
+    gap: 1.5rem;
+  }
+  
+  .fabric-item.left-align,
+  .fabric-item.right-align {
+    flex-direction: column !important;
+  }
+  
+  .fabric-circle {
+    width: 160px;
+    height: 160px;
+  }
+  
+  .fabric-info-box {
+    max-width: 100%;
+    padding: 1.5rem;
+  }
+  
+  .fabric-info-box h3 {
+    font-size: 1.3rem;
+  }
+  
+  .fabric-info-box p {
+    font-size: 0.9rem;
+  }
+}
+
+/* Mobile (640px and below) */
+@media (max-width: 640px) {
+  .fabrics-section {
+    padding: 2rem 1rem;
+  }
+  
+  .fabrics-container {
+    padding: 1.5rem 0.8rem;
+  }
+  
+  .fabrics-title {
+    font-size: 1.8rem;
+    margin-bottom: 1.5rem;
+    letter-spacing: 3px;
+  }
+  
+  .fabrics-grid {
+    gap: 1.5rem;
+  }
+  
+  .fabric-circle {
+    width: 140px;
+    height: 140px;
+  }
+  
+  .fabric-info-box {
+    padding: 1.2rem;
+  }
+  
+  .fabric-info-box h3 {
+    font-size: 1.2rem;
+    margin-bottom: 0.6rem;
+  }
+  
+  .fabric-info-box p {
+    font-size: 0.85rem;
+    line-height: 1.5;
+  }
+}
+
+/* Small Mobile (480px and below) */
+@media (max-width: 480px) {
+  .fabrics-section {
+    padding: 1.5rem 0.8rem;
+  }
+  
+  .fabrics-container {
+    padding: 1rem 0.5rem;
+  }
+  
+  .fabrics-title {
+    font-size: 1.5rem;
+    letter-spacing: 2px;
+  }
+  
+  .fabrics-grid {
+    gap: 1.2rem;
+  }
+  
+  .fabric-circle {
+    width: 120px;
+    height: 120px;
+  }
+  
+  .fabric-info-box {
+    padding: 1rem;
+  }
+  
+  .fabric-info-box h3 {
+    font-size: 1.1rem;
+  }
+  
+  .fabric-info-box p {
+    font-size: 0.8rem;
+  }
+}
+
+/* Extra Small Mobile (375px and below) */
+@media (max-width: 375px) {
+  .fabrics-title {
+    font-size: 1.3rem;
+  }
+  
+  .fabric-circle {
+    width: 100px;
+    height: 100px;
+  }
+  
+  .fabric-info-box h3 {
+    font-size: 1rem;
+  }
+  
+  .fabric-info-box p {
+    font-size: 0.75rem;
+  }
+}

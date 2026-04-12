@@ -383,3 +383,221 @@
     width: 100%;
   }
 }
+
+/* ============================================
+   MOBILE RESPONSIVE STYLES
+   ============================================ */
+
+/* Tablet (1024px and below) */
+@media (max-width: 1024px) {
+  .arrivals-banner {
+    padding: 3rem 2rem;
+  }
+  
+  .banner-content {
+    gap: 2rem;
+  }
+  
+  .arrivals-images {
+    gap: 1.5rem;
+  }
+  
+  .arrival-image-wrapper {
+    width: 180px;
+    height: 240px;
+  }
+}
+
+/* Tablet Portrait (768px and below) */
+@media (max-width: 768px) {
+  .new-arrivals {
+    padding: 3rem 1.5rem;
+  }
+  
+  .arrivals-banner {
+    padding: 2.5rem 1.5rem;
+  }
+  
+  .banner-content {
+    flex-direction: column;
+    gap: 2rem;
+  }
+  
+  .arrivals-images {
+    flex-direction: row;
+    justify-content: center;
+    gap: 1rem;
+    width: 100%;
+  }
+  
+  .arrival-image-wrapper {
+    width: 150px;
+    height: 200px;
+  }
+  
+  .arrivals-text {
+    text-align: center;
+    width: 100%;
+  }
+  
+  .arrivals-title {
+    font-size: 2.5rem;
+    margin-bottom: 1.5rem;
+  }
+  
+  .shop-arrivals-btn {
+    padding: 0.9rem 2rem;
+    font-size: 0.9rem;
+  }
+  
+  /* Adjust decorative elements */
+  .frame-corner {
+    width: 40px;
+    height: 40px;
+  }
+  
+  .floral-decoration {
+    width: 50px;
+    height: 50px;
+  }
+  
+  .leaf {
+    width: 30px;
+    height: 30px;
+  }
+}
+
+/* Mobile (640px and below) */
+@media (max-width: 640px) {
+  .new-arrivals {
+    padding: 2rem 1rem;
+  }
+  
+  .arrivals-banner {
+    padding: 2rem 1rem;
+  }
+  
+  .banner-content {
+    gap: 1.5rem;
+  }
+  
+  .arrivals-images {
+    gap: 0.8rem;
+    overflow-x: auto;
+    justify-content: flex-start;
+    padding: 0 0.5rem;
+    -webkit-overflow-scrolling: touch;
+  }
+  
+  .arrival-image-wrapper {
+    width: 130px;
+    height: 180px;
+    flex-shrink: 0;
+  }
+  
+  .arrivals-title {
+    font-size: 2rem;
+    margin-bottom: 1rem;
+    letter-spacing: 3px;
+  }
+  
+  .shop-arrivals-btn {
+    padding: 0.8rem 1.8rem;
+    font-size: 0.85rem;
+  }
+  
+  .frame-corner {
+    width: 30px;
+    height: 30px;
+  }
+  
+  .floral-decoration {
+    width: 40px;
+    height: 40px;
+  }
+  
+  .leaf {
+    width: 25px;
+    height: 25px;
+  }
+}
+
+/* Small Mobile (480px and below) */
+@media (max-width: 480px) {
+  .new-arrivals {
+    padding: 1.5rem 0.8rem;
+  }
+  
+  .arrivals-banner {
+    padding: 1.5rem 0.8rem;
+  }
+  
+  .arrivals-images {
+    gap: 0.6rem;
+    padding: 0 0.3rem;
+  }
+  
+  .arrival-image-wrapper {
+    width: 110px;
+    height: 160px;
+  }
+  
+  .arrival-overlay {
+    font-size: 0.75rem;
+    padding: 0.5rem;
+  }
+  
+  .arrivals-title {
+    font-size: 1.6rem;
+    letter-spacing: 2px;
+  }
+  
+  .shop-arrivals-btn {
+    padding: 0.7rem 1.5rem;
+    font-size: 0.8rem;
+  }
+  
+  .frame-corner {
+    width: 25px;
+    height: 25px;
+  }
+  
+  .floral-decoration,
+  .leaf {
+    display: none; /* Hide decorative elements on very small screens */
+  }
+  
+  .image-upload-hint {
+    padding: 1rem;
+  }
+  
+  .image-upload-hint svg {
+    width: 30px;
+    height: 30px;
+  }
+  
+  .image-upload-hint span {
+    font-size: 0.75rem;
+  }
+  
+  .upload-instruction {
+    font-size: 0.65rem;
+  }
+}
+
+/* Extra Small Mobile (375px and below) */
+@media (max-width: 375px) {
+  .arrivals-title {
+    font-size: 1.4rem;
+  }
+  
+  .arrival-image-wrapper {
+    width: 100px;
+    height: 145px;
+  }
+  
+  .shop-arrivals-btn {
+    padding: 0.6rem 1.2rem;
+    font-size: 0.75rem;
+  }
+}

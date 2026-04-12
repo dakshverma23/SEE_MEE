@@ -363,25 +363,79 @@
     padding: 2.5rem 1rem 2rem;
   }
 
+  .magazine-subtitle {
+    font-size: 0.75rem;
+    letter-spacing: 2px;
+  }
+
   .magazine-title {
     font-size: 1.8rem;
   }
 
+  .magazine-underline {
+    width: 60px;
+    height: 3px;
+  }
+
   .magazine-image-container {
-    height: 350px;
+    height: 300px;
   }
 
   .magazine-story-content {
     padding: 1.5rem 1rem;
   }
 
+  .magazine-story-content::after {
+    width: 90%;
+    height: 75%;
+  }
+
   .story-title {
-    font-size: 1.8rem;
+    font-size: 1.6rem;
     margin-bottom: 0.8rem;
+    max-width: 90%;
+    letter-spacing: 1px;
   }
 
   .story-description {
-    font-size: 0.95rem;
+    font-size: 0.9rem;
     line-height: 1.5;
+    max-width: 85%;
+  }
+
+  .magazine-dots-pagination {
+    padding: 1.5rem 0;
+    gap: 0.6rem;
+  }
+
+  .magazine-dot {
+    width: 8px;
+    height: 8px;
+  }
+
+  .magazine-dot.active {
+    width: 24px;
+  }
+}
+
+@media (max-width: 375px) {
+  .magazine-header {
+    padding: 2rem 0.8rem 1.5rem;
+  }
+
+  .magazine-title {
+    font-size: 1.6rem;
+  }
+
+  .magazine-image-container {
+    height: 280px;
+  }
+
+  .story-title {
+    font-size: 1.4rem;
+  }
+
+  .story-description {
+    font-size: 0.85rem;
   }
 }

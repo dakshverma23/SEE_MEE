@@ -249,20 +249,164 @@
   }
 }
 
-@media (max-width: 640px) {
+@media (max-width: 768px) {
   .categories-slider {
-    padding: 4rem 1.5rem;
+    padding: 3rem 1.5rem;
+  }
+
+  .slider-subtitle {
+    font-size: 0.8rem;
+    letter-spacing: 2px;
   }
 
   .slider-title {
     font-size: 2.5rem;
   }
 
+  .slider-content {
+    padding: 0 3rem;
+    min-height: 450px;
+  }
+
+  .slider-arrow {
+    width: 45px;
+    height: 45px;
+  }
+
+  .slider-info h3 {
+    font-size: 2rem;
+  }
+
+  .slider-info p {
+    font-size: 0.95rem;
+  }
+
+  .category-features {
+    gap: 0.6rem;
+  }
+
+  .feature-tag {
+    font-size: 0.8rem;
+    padding: 0.4rem 0.8rem;
+  }
+
+  .view-collection-btn {
+    padding: 0.9rem 1.8rem;
+    font-size: 0.9rem;
+  }
+}
+
+@media (max-width: 640px) {
+  .categories-slider {
+    padding: 3rem 1rem;
+  }
+
+  .slider-subtitle {
+    font-size: 0.75rem;
+  }
+
+  .slider-title {
+    font-size: 2rem;
+  }
+
+  .slider-content {
+    padding: 0 2.5rem;
+    min-height: 400px;
+  }
+
+  .slider-arrow {
+    width: 40px;
+    height: 40px;
+  }
+
+  .slider-image-wrapper {
+    max-height: 320px;
+  }
+
   .slider-info h3 {
     font-size: 1.75rem;
   }
 
+  .slider-info p {
+    font-size: 0.9rem;
+  }
+
+  .slider-indicators {
+    margin-top: 2rem;
+    gap: 0.8rem;
+  }
+
+  .indicator {
+    width: 32px;
+    height: 3px;
+  }
+}
+
+@media (max-width: 480px) {
+  .categories-slider {
+    padding: 2.5rem 1rem;
+  }
+
+  .slider-title {
+    font-size: 1.8rem;
+  }
+
+  .slider-content {
+    padding: 0 2rem;
+    min-height: 380px;
+  }
+
+  .slider-arrow {
+    width: 36px;
+    height: 36px;
+  }
+
   .slider-image-wrapper {
-    max-height: 350px;
+    max-height: 280px;
+  }
+
+  .slider-subtitle-text {
+    font-size: 0.75rem;
+  }
+
+  .slider-info h3 {
+    font-size: 1.5rem;
+  }
+
+  .slider-info p {
+    font-size: 0.85rem;
+    line-height: 1.6;
+  }
+
+  .category-features {
+    gap: 0.5rem;
+  }
+
+  .feature-tag {
+    font-size: 0.75rem;
+    padding: 0.35rem 0.7rem;
+  }
+
+  .view-collection-btn {
+    padding: 0.8rem 1.5rem;
+    font-size: 0.85rem;
+  }
+}
+
+@media (max-width: 375px) {
+  .slider-title {
+    font-size: 1.6rem;
+  }
+
+  .slider-content {
+    padding: 0 1.5rem;
+  }
+
+  .slider-info h3 {
+    font-size: 1.3rem;
+  }
+
+  .slider-image-wrapper {
+    max-height: 260px;
   }
 }

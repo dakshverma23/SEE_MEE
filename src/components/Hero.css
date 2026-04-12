@@ -364,3 +364,247 @@
     width: 100%;
   }
 }
+
+/* ============================================
+   MOBILE RESPONSIVE STYLES
+   ============================================ */
+
+/* Tablet Landscape (1024px and below) */
+@media (max-width: 1024px) {
+  .hero-text-left,
+  .hero-text-right {
+    font-size: 5rem;
+    top: 8%;
+  }
+  
+  .hero-text-left {
+    left: 30%;
+  }
+  
+  .hero-text-right {
+    right: 30%;
+  }
+  
+  .hero-thumbnails {
+    top: 15%;
+    left: 5%;
+  }
+  
+  .hero-menu {
+    right: 5%;
+  }
+  
+  .carousel-arch {
+    width: 320px;
+    height: 450px;
+  }
+}
+
+/* Tablet Portrait (768px and below) */
+@media (max-width: 768px) {
+  .hero-jewelry {
+    min-height: 100vh;
+    padding: 80px 20px 40px;
+  }
+  
+  /* Hide large text on mobile */
+  .hero-text-left,
+  .hero-text-right {
+    font-size: 3.5rem;
+    top: 10%;
+  }
+  
+  .hero-text-left {
+    left: 10%;
+  }
+  
+  .hero-text-right {
+    right: 10%;
+  }
+  
+  /* Stack thumbnails vertically on mobile */
+  .hero-thumbnails {
+    top: 120px;
+    left: 10px;
+    flex-direction: column;
+    gap: 10px;
+  }
+  
+  .hero-thumb {
+    position: relative !important;
+    left: 0 !important;
+    width: 50px;
+    height: 50px;
+  }
+  
+  /* Simplify carousel for mobile */
+  .hero-carousel {
+    width: 100%;
+    max-width: 400px;
+    margin: 0 auto;
+  }
+  
+  .carousel-arch {
+    width: 280px;
+    height: 400px;
+  }
+  
+  /* Stack menu vertically */
+  .hero-menu {
+    position: fixed;
+    bottom: 20px;
+    right: 20px;
+    left: auto;
+    top: auto;
+    flex-direction: row;
+    gap: 10px;
+    background: rgba(255, 255, 255, 0.95);
+    padding: 10px;
+    border-radius: 30px;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+  }
+  
+  .hero-menu-item {
+    writing-mode: horizontal-tb;
+    padding: 8px 12px;
+    font-size: 0.7rem;
+  }
+  
+  .hero-menu-item span {
+    display: none;
+  }
+  
+  .hero-menu-item::before {
+    content: '•';
+    font-size: 1.2rem;
+  }
+}
+
+/* Mobile (640px and below) */
+@media (max-width: 640px) {
+  .hero-jewelry {
+    padding: 70px 15px 30px;
+  }
+  
+  .hero-text-left,
+  .hero-text-right {
+    font-size: 2.5rem;
+    top: 80px;
+  }
+  
+  .hero-text-left {
+    left: 5%;
+  }
+  
+  .hero-text-right {
+    right: 5%;
+  }
+  
+  .hero-thumbnails {
+    top: 100px;
+    left: 5px;
+  }
+  
+  .hero-thumb {
+    width: 40px;
+    height: 40px;
+  }
+  
+  .carousel-arch {
+    width: 240px;
+    height: 350px;
+  }
+  
+  .carousel-label {
+    padding: 8px 12px;
+  }
+  
+  .label-category {
+    font-size: 0.8rem;
+  }
+  
+  .label-desc {
+    font-size: 0.65rem;
+  }
+  
+  .hero-menu {
+    bottom: 10px;
+    right: 10px;
+    padding: 8px;
+    gap: 8px;
+  }
+  
+  .hero-menu-item {
+    padding: 6px 10px;
+    font-size: 0.65rem;
+  }
+}
+
+/* Small Mobile (480px and below) */
+@media (max-width: 480px) {
+  .hero-jewelry {
+    padding: 60px 10px 20px;
+  }
+  
+  .hero-text-left,
+  .hero-text-right {
+    font-size: 2rem;
+    top: 70px;
+  }
+  
+  .hero-thumbnails {
+    display: none; /* Hide thumbnails on very small screens */
+  }
+  
+  .carousel-arch {
+    width: 200px;
+    height: 300px;
+  }
+  
+  .carousel-image-container {
+    border-radius: 15px;
+  }
+  
+  .carousel-label {
+    padding: 6px 10px;
+  }
+  
+  .label-category {
+    font-size: 0.7rem;
+  }
+  
+  .label-desc {
+    font-size: 0.6rem;
+  }
+  
+  .hero-menu {
+    flex-wrap: wrap;
+    max-width: calc(100% - 20px);
+  }
+  
+  .hero-menu-item {
+    padding: 5px 8px;
+    font-size: 0.6rem;
+  }
+}
+
+/* Extra Small Mobile (375px and below) */
+@media (max-width: 375px) {
+  .hero-text-left,
+  .hero-text-right {
+    font-size: 1.5rem;
+    letter-spacing: -2px;
+  }
+  
+  .carousel-arch {
+    width: 180px;
+    height: 270px;
+  }
+  
+  .hero-menu {
+    bottom: 5px;
+    right: 5px;
+    padding: 6px;
+    gap: 6px;
+  }
+}
