@@ -27,7 +27,8 @@ const optimizeCloudinaryUrl = (url, options = {}) => {
     quality = 'auto:good',
     format = 'auto',
     crop = 'scale',
-    fetchFormat = 'auto'
+    fetchFormat = 'auto',
+    blur = null
   } = options
 
   // Check if URL already has transformations
@@ -39,16 +40,21 @@ const optimizeCloudinaryUrl = (url, options = {}) => {
       `f_${format}`,
       `c_${crop}`,
       'dpr_auto'
-    ].join(',')
+    ]
     
-    return url.replace('/upload/', `/upload/${transformations}/`)
+    // Add blur if specified
+    if (blur) {
+      transformations.push(`e_blur:${blur}`)
+    }
+    
+    return url.replace('/upload/', `/upload/${transformations.join(',')}/`)
   }
   
   return url
 }
 
 // Specific optimization presets
-export const getOptimizedImageUrl = (imageData, preset = 'default') => {
+export const getOptimizedImageUrl = (imageData, preset = 'default', customOptions = {}) => {
   const presets = {
     // Hero/Carousel images - Large, high quality
     hero: {
@@ -59,6 +65,13 @@ export const getOptimizedImageUrl = (imageData, preset = 'default') => {
     },
     // Product images - Medium size
     product: {
+      width: 800,
+      quality: 'auto:good',
+      format: 'auto',
+      crop: 'fill'
+    },
+    // Card images - Medium size
+    card: {
       width: 800,
       quality: 'auto:good',
       format: 'auto',
@@ -87,7 +100,10 @@ export const getOptimizedImageUrl = (imageData, preset = 'default') => {
     }
   }
 
-  return getImageUrl(imageData, presets[preset] || presets.default)
+  // Merge preset with custom options
+  const options = { ...(presets[preset] || presets.default), ...customOptions }
+  
+  return getImageUrl(imageData, options)
 }
 
 // Helper function to get video URL from product video data
