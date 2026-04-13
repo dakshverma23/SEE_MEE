@@ -1,7 +1,10 @@
 import { useState, useEffect } from 'react'
+import { useNavigate } from 'react-router-dom'
+import { motion } from 'framer-motion'
 import './Categories.css'
 
 const Fabrics = () => {
+  const navigate = useNavigate()
   const [fabrics, setFabrics] = useState([
     {
       id: 1,
@@ -54,6 +57,14 @@ const Fabrics = () => {
       <div className="fabrics-container">
         <div className="fabrics-header">
           <h2 className="fabrics-title">FABRICS</h2>
+          <motion.button
+            className="view-all-fabrics-btn"
+            onClick={() => navigate('/fabrics')}
+            whileHover={{ scale: 1.05 }}
+            whileTap={{ scale: 0.95 }}
+          >
+            Explore All Fabrics
+          </motion.button>
         </div>
 
         <div className="fabrics-grid">

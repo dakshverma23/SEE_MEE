@@ -348,3 +348,31 @@
     font-size: 0.75rem;
   }
 }
+
+
+/* View All Fabrics Button */
+.fabrics-header {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 20px;
+}
+
+.view-all-fabrics-btn {
+  padding: 12px 35px;
+  background: var(--primary-gold);
+  color: var(--charcoal);
+  border: none;
+  border-radius: 30px;
+  font-family: var(--font-body);
+  font-size: 1rem;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  letter-spacing: 1px;
+}
+
+.view-all-fabrics-btn:hover {
+  background: var(--dark-gold);
+  box-shadow: 0 5px 20px rgba(212, 175, 55, 0.4);
+}

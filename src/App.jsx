@@ -24,6 +24,7 @@ const Orders = lazy(() => import('./pages/Orders'))
 const MagazinePage = lazy(() => import('./pages/MagazinePage'))
 const CollectionsPage = lazy(() => import('./pages/CollectionsPage'))
 const NewArrivalsPage = lazy(() => import('./pages/NewArrivalsPage'))
+const FabricsPage = lazy(() => import('./pages/FabricsPage'))
 const AnarkaliPage = lazy(() => import('./pages/AnarkaliPage'))
 const PalazzoPage = lazy(() => import('./pages/PalazzoPage'))
 const StraightCutPage = lazy(() => import('./pages/StraightCutPage'))
@@ -121,6 +122,9 @@ function App() {
 
                 {/* New Arrivals Page */}
                 <Route path="/new-arrivals" element={<PageWithNav><NewArrivalsPage /></PageWithNav>} />
+
+                {/* Fabrics Page */}
+                <Route path="/fabrics" element={<PageWithNav><FabricsPage /></PageWithNav>} />
 
                 {/* Category Pages */}
                 <Route path="/category/anarkali" element={<PageWithNav><AnarkaliPage /></PageWithNav>} />
