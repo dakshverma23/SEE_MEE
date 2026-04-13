@@ -96,7 +96,7 @@ const Footer = () => {
               Subscribe to get special offers and updates
             </p>
             <div className="newsletter-form">
-              <input type="email" placeholder="Your email" />
+              <input type="email" id="newsletter-email" name="email" placeholder="Your email" />
               <motion.button
                 whileHover={{ scale: 1.05 }}
                 whileTap={{ scale: 0.95 }}

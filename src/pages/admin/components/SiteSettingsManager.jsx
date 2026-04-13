@@ -263,6 +263,7 @@ const SiteSettingsManager = () => {
               <input
                 type="file"
                 id="logo-upload"
+                name="logo"
                 accept="image/*"
                 onChange={(e) => handleLogoUpload(e.target.files[0])}
                 disabled={uploading}
@@ -288,6 +289,7 @@ const SiteSettingsManager = () => {
               <input
                 type="file"
                 id="about-upload"
+                name="aboutImage"
                 accept="image/*"
                 onChange={(e) => handleAboutImageUpload(e.target.files[0])}
                 disabled={uploading}
@@ -353,6 +355,7 @@ const SiteSettingsManager = () => {
                     <input
                       type="file"
                       id={`fabric-upload-${index}`}
+                      name={`fabric-image-${index}`}
                       accept="image/*"
                       onChange={(e) => handleFabricImageUpload(index, e.target.files[0])}
                       disabled={uploading}
@@ -368,6 +371,8 @@ const SiteSettingsManager = () => {
                         <h3>Edit {fabric.title}</h3>
                         <input
                           type="text"
+                          id={`fabric-title-${index}`}
+                          name="title"
                           value={fabric.title}
                           onChange={(e) => {
                             const updated = [...settings.fabrics]
@@ -377,6 +382,8 @@ const SiteSettingsManager = () => {
                           placeholder="Title"
                         />
                         <textarea
+                          id={`fabric-description-${index}`}
+                          name="description"
                           value={fabric.description}
                           onChange={(e) => {
                             const updated = [...settings.fabrics]
@@ -462,6 +469,7 @@ const SiteSettingsManager = () => {
                     <input
                       type="file"
                       id={`category-upload-${index}`}
+                      name={`category-image-${index}`}
                       accept="image/*"
                       onChange={(e) => handleCategoryImageUpload(index, e.target.files[0])}
                       disabled={uploading}
@@ -477,6 +485,8 @@ const SiteSettingsManager = () => {
                         <h3>Edit {category.title}</h3>
                         <input
                           type="text"
+                          id={`category-title-${index}`}
+                          name="title"
                           value={category.title}
                           onChange={(e) => {
                             const updated = [...settings.categorySlides]
@@ -487,6 +497,8 @@ const SiteSettingsManager = () => {
                         />
                         <input
                           type="text"
+                          id={`category-slug-${index}`}
+                          name="slug"
                           value={category.slug}
                           onChange={(e) => {
                             const updated = [...settings.categorySlides]
@@ -497,6 +509,8 @@ const SiteSettingsManager = () => {
                         />
                         <input
                           type="text"
+                          id={`category-subtitle-${index}`}
+                          name="subtitle"
                           value={category.subtitle}
                           onChange={(e) => {
                             const updated = [...settings.categorySlides]
@@ -506,6 +520,8 @@ const SiteSettingsManager = () => {
                           placeholder="Subtitle"
                         />
                         <textarea
+                          id={`category-description-${index}`}
+                          name="description"
                           value={category.description}
                           onChange={(e) => {
                             const updated = [...settings.categorySlides]
@@ -522,6 +538,8 @@ const SiteSettingsManager = () => {
                             <div key={featureIdx} className="feature-input-group">
                               <input
                                 type="text"
+                                id={`category-feature-${index}-${featureIdx}`}
+                                name={`feature-${featureIdx}`}
                                 value={feature}
                                 onChange={(e) => handleFeatureChange(index, featureIdx, e.target.value)}
                                 placeholder={`Feature ${featureIdx + 1}`}

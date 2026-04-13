@@ -1,13 +1,12 @@
-import { useState, useEffect } from 'react'
-import { motion, AnimatePresence } from 'framer-motion'
+import { useState, useEffect, useRef } from 'react'
+import { motion, useScroll, useTransform } from 'framer-motion'
 import { getOptimizedImageUrl } from '../utils/imageHelper'
 import './MagazinePage.css'
 
 const MagazinePage = () => {
-  const [currentIndex, setCurrentIndex] = useState(0)
   const [stories, setStories] = useState([])
   const [loading, setLoading] = useState(true)
-  const [direction, setDirection] = useState(0)
+  const scrollContainerRef = useRef(null)
 
   useEffect(() => {
     fetchStories()
@@ -27,32 +26,6 @@ const MagazinePage = () => {
     }
   }
 
-  const nextSlide = () => {
-    setDirection(1)
-    setCurrentIndex((prev) => (prev + 1) % stories.length)
-  }
-
-  const prevSlide = () => {
-    setDirection(-1)
-    setCurrentIndex((prev) => (prev - 1 + stories.length) % stories.length)
-  }
-
-  const goToSlide = (index) => {
-    setDirection(index > currentIndex ? 1 : -1)
-    setCurrentIndex(index)
-  }
-
-  // Auto-advance every 7 seconds
-  useEffect(() => {
-    if (stories.length === 0) return
-    
-    const interval = setInterval(() => {
-      nextSlide()
-    }, 7000)
-
-    return () => clearInterval(interval)
-  }, [stories.length, currentIndex])
-
   if (loading) {
     return (
       <div className="magazine-page-loading">
@@ -71,25 +44,6 @@ const MagazinePage = () => {
     )
   }
 
-  const currentStory = stories[currentIndex]
-
-  const slideVariants = {
-    enter: (direction) => ({
-      x: direction > 0 ? 1000 : -1000,
-      opacity: 0
-    }),
-    center: {
-      zIndex: 1,
-      x: 0,
-      opacity: 1
-    },
-    exit: (direction) => ({
-      zIndex: 0,
-      x: direction < 0 ? 1000 : -1000,
-      opacity: 0
-    })
-  }
-
   return (
     <div className="magazine-page">
       {/* Header */}
@@ -103,106 +57,77 @@ const MagazinePage = () => {
         <p className="magazine-page-subtitle">Discover Our Culture, Heritage & Stories</p>
       </motion.div>
 
-      {/* Slideshow Container */}
-      <div className="magazine-slideshow">
-        <AnimatePresence initial={false} custom={direction} mode="wait">
-          <motion.div
-            key={currentIndex}
-            custom={direction}
-            variants={slideVariants}
-            initial="enter"
-            animate="center"
-            exit="exit"
-            transition={{
-              x: { type: "spring", stiffness: 300, damping: 30 },
-              opacity: { duration: 0.5 }
-            }}
-            className="magazine-slide"
-          >
-            {/* Background Image */}
-            <div className="magazine-slide-bg">
-              <img 
-                src={getOptimizedImageUrl(currentStory.image, 'hero')} 
-                alt={currentStory.title}
-              />
-              <div className="magazine-slide-overlay"></div>
-            </div>
+      {/* Scroll-Driven Gallery */}
+      <ScrollGallery stories={stories} />
+    </div>
+  )
+}
 
-            {/* Content */}
-            <div className="magazine-slide-content">
-              <motion.div
-                initial={{ opacity: 0, y: 50 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ delay: 0.3, duration: 0.8 }}
-                className="magazine-content-wrapper"
-              >
-                <span className="magazine-slide-number">
-                  {String(currentIndex + 1).padStart(2, '0')} / {String(stories.length).padStart(2, '0')}
-                </span>
-                <h2 className="magazine-slide-title">{currentStory.title}</h2>
-                <p className="magazine-slide-description">{currentStory.description}</p>
-              </motion.div>
-            </div>
-          </motion.div>
-        </AnimatePresence>
+// Scroll-Driven Gallery Component
+const ScrollGallery = ({ stories }) => {
+  const containerRef = useRef(null)
+  
+  // Track scroll progress of the container
+  const { scrollYProgress } = useScroll({
+    target: containerRef,
+    offset: ["start start", "end end"]
+  })
 
-        {/* Navigation Arrows */}
-        <button 
-          className="magazine-nav-btn magazine-nav-prev" 
-          onClick={prevSlide}
-          aria-label="Previous slide"
-        >
-          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-            <polyline points="15 18 9 12 15 6"></polyline>
-          </svg>
-        </button>
-        <button 
-          className="magazine-nav-btn magazine-nav-next" 
-          onClick={nextSlide}
-          aria-label="Next slide"
-        >
-          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-            <polyline points="9 18 15 12 9 6"></polyline>
-          </svg>
-        </button>
+  return (
+    <div ref={containerRef} className="scroll-gallery-container" style={{ position: 'relative' }}>
+      <div className="scroll-gallery-sticky">
+        {stories.map((story, index) => {
+          const totalImages = stories.length
+          const segmentSize = 1 / totalImages
+          const start = index * segmentSize
+          const end = start + segmentSize
 
-        {/* Dot Indicators */}
-        <div className="magazine-indicators">
-          {stories.map((_, index) => (
-            <button
-              key={index}
-              className={`magazine-indicator ${index === currentIndex ? 'active' : ''}`}
-              onClick={() => goToSlide(index)}
-              aria-label={`Go to slide ${index + 1}`}
-            >
-              <span className="indicator-line"></span>
-            </button>
-          ))}
-        </div>
-      </div>
+          // Continuous zoom in only (1 → 1.5)
+          const scale = useTransform(
+            scrollYProgress,
+            [start, end],
+            [1, 1.5]
+          )
 
-      {/* Story Grid Preview */}
-      <div className="magazine-grid">
-        <h3 className="magazine-grid-title">All Stories</h3>
-        <div className="magazine-grid-items">
-          {stories.map((story, index) => (
+          // Smooth fade in and out with overlap
+          const opacity = useTransform(
+            scrollYProgress,
+            [
+              start - segmentSize * 0.1,  // Start fading in slightly before segment
+              start + segmentSize * 0.1,  // Fully visible
+              end - segmentSize * 0.2,    // Stay visible
+              end + segmentSize * 0.1     // Fade out as next comes in
+            ],
+            [0, 1, 1, 0]
+          )
+
+          return (
             <motion.div
               key={story._id}
-              className={`magazine-grid-item ${index === currentIndex ? 'active' : ''}`}
-              onClick={() => goToSlide(index)}
-              whileHover={{ scale: 1.05 }}
-              whileTap={{ scale: 0.95 }}
+              className="scroll-gallery-image"
+              style={{
+                scale,
+                opacity,
+                zIndex: totalImages - index
+              }}
             >
-              <div className="grid-item-image">
-                <img src={getOptimizedImageUrl(story.image, 'thumbnail')} alt={story.title} />
-                <div className="grid-item-overlay">
-                  <span className="grid-item-number">{String(index + 1).padStart(2, '0')}</span>
-                </div>
-              </div>
-              <h4 className="grid-item-title">{story.title}</h4>
+              <img 
+                src={getOptimizedImageUrl(story.image, 'hero')} 
+                alt={story.title}
+              />
+              <div className="scroll-gallery-overlay"></div>
+              
+              {/* Story Content */}
+              <motion.div 
+                className="scroll-gallery-content"
+                style={{ opacity }}
+              >
+                <h2 className="story-title">{story.title}</h2>
+                <p className="story-description">{story.description}</p>
+              </motion.div>
             </motion.div>
-          ))}
-        </div>
+          )
+        })}
       </div>
     </div>
   )

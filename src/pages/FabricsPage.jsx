@@ -93,57 +93,124 @@ const FabricsPage = () => {
         </p>
       </motion.div>
 
-      {/* Fabrics Grid */}
-      <div className="fabrics-content">
-        <div className="fabrics-grid">
-          {fabrics.map((fabric, index) => (
-            <motion.div
-              key={fabric._id || index}
-              className="fabric-card"
-              initial={{ opacity: 0, y: 50 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true }}
-              transition={{ duration: 0.6, delay: index * 0.15 }}
-            >
+      {/* Fabrics Magazine Layout */}
+      <div className="fabrics-magazine-section">
+        {fabrics.map((fabric, index) => (
+          <motion.div
+            key={fabric._id || index}
+            className={`fabric-magazine-item ${index % 2 === 0 ? 'image-right' : 'image-left'}`}
+            initial={{ opacity: 0, y: 80 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true, margin: "-100px" }}
+            transition={{ duration: 0.8, delay: 0.2 }}
+          >
+            <div className="fabric-magazine-content">
               <motion.div 
-                className="fabric-card-inner"
-                whileHover={{ y: -10 }}
-                transition={{ duration: 0.3 }}
+                className="fabric-text-side"
+                initial={{ opacity: 0, x: index % 2 === 0 ? -50 : 50 }}
+                whileInView={{ opacity: 1, x: 0 }}
+                viewport={{ once: true, margin: "-100px" }}
+                transition={{ duration: 0.8, delay: 0.3 }}
               >
-                {/* Image Section */}
-                <div className="fabric-image-wrapper" onClick={() => openModal(fabric)}>
-                  <img 
-                    src={getOptimizedImageUrl(fabric.image, 'product')} 
-                    alt={fabric.title}
-                    className="fabric-image"
-                  />
-                  <div className="fabric-image-overlay">
-                    <span className="view-details-text">View Details</span>
-                  </div>
-                  <div className="fabric-number">{String(index + 1).padStart(2, '0')}</div>
-                </div>
+                <motion.div 
+                  className="fabric-details"
+                  initial={{ opacity: 0, y: 20 }}
+                  whileInView={{ opacity: 1, y: 0 }}
+                  viewport={{ once: true }}
+                  transition={{ duration: 0.6, delay: 0.5 }}
+                >
+                  <h4>Characteristics:</h4>
+                  <ul>
+                    {['Luxurious texture and feel', 'Excellent drape and flow', 'Easy to maintain and care for', 'Perfect for ethnic wear', 'Available in various colors'].map((item, idx) => (
+                      <motion.li
+                        key={idx}
+                        initial={{ opacity: 0, x: -20 }}
+                        whileInView={{ opacity: 1, x: 0 }}
+                        viewport={{ once: true }}
+                        transition={{ duration: 0.4, delay: 0.6 + (idx * 0.1) }}
+                      >
+                        {item}
+                      </motion.li>
+                    ))}
+                  </ul>
+                </motion.div>
 
-                {/* Content Section */}
-                <div className="fabric-content">
-                  <h3 className="fabric-title">{fabric.title}</h3>
-                  <p className="fabric-description">{fabric.description}</p>
-                  
-                  <motion.button
-                    className="learn-more-btn"
-                    onClick={() => openModal(fabric)}
-                    whileHover={{ scale: 1.05 }}
-                    whileTap={{ scale: 0.95 }}
-                  >
-                    Learn More
-                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-                      <path d="M5 12h14M12 5l7 7-7 7"/>
-                    </svg>
-                  </motion.button>
-                </div>
+                <motion.div 
+                  className="fabric-care"
+                  initial={{ opacity: 0, y: 20 }}
+                  whileInView={{ opacity: 1, y: 0 }}
+                  viewport={{ once: true }}
+                  transition={{ duration: 0.6, delay: 1.1 }}
+                >
+                  <h4>Care Instructions:</h4>
+                  <p>Dry clean recommended for best results. Hand wash in cold water if needed. Iron on low heat.</p>
+                </motion.div>
               </motion.div>
-            </motion.div>
-          ))}
-        </div>
+
+              <motion.div 
+                className="fabric-image-side"
+                initial={{ opacity: 0, x: index % 2 === 0 ? 50 : -50 }}
+                whileInView={{ opacity: 1, x: 0 }}
+                viewport={{ once: true, margin: "-100px" }}
+                transition={{ duration: 0.8, delay: 0.3 }}
+              >
+                <motion.div 
+                  className="fabric-image-container"
+                  whileHover={{ scale: 1.02 }}
+                  transition={{ duration: 0.4 }}
+                >
+                  <img 
+                    src={getOptimizedImageUrl(fabric.image, 'hero')} 
+                    alt={fabric.title}
+                    className="fabric-magazine-image"
+                  />
+                  <motion.div 
+                    className="fabric-image-overlay"
+                    initial={{ opacity: 0, y: 30 }}
+                    whileInView={{ opacity: 1, y: 0 }}
+                    viewport={{ once: true }}
+                    transition={{ duration: 0.6, delay: 0.6 }}
+                  >
+                    <motion.span 
+                      className="fabric-overlay-kicker"
+                      initial={{ opacity: 0 }}
+                      whileInView={{ opacity: 1 }}
+                      viewport={{ once: true }}
+                      transition={{ duration: 0.4, delay: 0.8 }}
+                    >
+                      Premium Fabric
+                    </motion.span>
+                    <motion.h3 
+                      className="fabric-overlay-title"
+                      initial={{ opacity: 0, y: 10 }}
+                      whileInView={{ opacity: 1, y: 0 }}
+                      viewport={{ once: true }}
+                      transition={{ duration: 0.5, delay: 0.9 }}
+                    >
+                      {fabric.title}
+                    </motion.h3>
+                    <motion.div 
+                      className="fabric-overlay-divider"
+                      initial={{ width: 0 }}
+                      whileInView={{ width: 60 }}
+                      viewport={{ once: true }}
+                      transition={{ duration: 0.6, delay: 1.0 }}
+                    />
+                    <motion.p 
+                      className="fabric-overlay-description"
+                      initial={{ opacity: 0 }}
+                      whileInView={{ opacity: 1 }}
+                      viewport={{ once: true }}
+                      transition={{ duration: 0.5, delay: 1.1 }}
+                    >
+                      {fabric.description}
+                    </motion.p>
+                  </motion.div>
+                </motion.div>
+              </motion.div>
+            </div>
+          </motion.div>
+        ))}
       </div>
 
       {/* Why Choose Our Fabrics */}

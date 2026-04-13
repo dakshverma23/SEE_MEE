@@ -138,6 +138,7 @@ const NewArrivalsManager = () => {
               <input
                 type="file"
                 id={`upload-${cat.key}`}
+                name={`new-arrival-${cat.key}`}
                 accept="image/*"
                 onChange={(e) => handleImageUpload(cat.key, e.target.files[0])}
                 disabled={uploading}

@@ -77,9 +77,11 @@ const AdminLogin = () => {
           {error && <div className="error-message">{error}</div>}
           
           <div className="form-group">
-            <label>Email</label>
+            <label htmlFor="admin-email">Email</label>
             <input
               type="email"
+              id="admin-email"
+              name="email"
               value={credentials.email}
               onChange={(e) => setCredentials({ ...credentials, email: e.target.value })}
               required
@@ -88,9 +90,11 @@ const AdminLogin = () => {
           </div>
 
           <div className="form-group">
-            <label>Password</label>
+            <label htmlFor="admin-password">Password</label>
             <input
               type="password"
+              id="admin-password"
+              name="password"
               value={credentials.password}
               onChange={(e) => setCredentials({ ...credentials, password: e.target.value })}
               required

@@ -259,9 +259,11 @@ const MagazineManager = () => {
           <h2>{editingMagazine ? 'Edit Magazine Item' : 'Add New Magazine Item'}</h2>
           <form onSubmit={handleSubmit}>
             <div className="form-group">
-              <label>Title *</label>
+              <label htmlFor="magazine-title">Title *</label>
               <input
                 type="text"
+                id="magazine-title"
+                name="title"
                 value={formData.title}
                 onChange={(e) => setFormData({...formData, title: e.target.value})}
                 required
@@ -270,8 +272,10 @@ const MagazineManager = () => {
             </div>
 
             <div className="form-group">
-              <label>Description *</label>
+              <label htmlFor="magazine-description">Description *</label>
               <textarea
+                id="magazine-description"
+                name="description"
                 value={formData.description}
                 onChange={(e) => setFormData({...formData, description: e.target.value})}
                 rows="4"
@@ -281,9 +285,11 @@ const MagazineManager = () => {
             </div>
 
             <div className="form-group">
-              <label>Image *</label>
+              <label htmlFor="magazine-image">Image *</label>
               <input
                 type="file"
+                id="magazine-image"
+                name="image"
                 accept="image/*"
                 onChange={(e) => handleImageUpload(e.target.files[0])}
                 disabled={uploading}

@@ -283,9 +283,11 @@ const CarouselManager = () => {
           <h2>{editingImage ? 'Edit Carousel Image' : 'Add New Carousel Image'}</h2>
           <form onSubmit={handleSubmit}>
             <div className="form-group">
-              <label>Image *</label>
+              <label htmlFor="carousel-image">Image *</label>
               <input
                 type="file"
+                id="carousel-image"
+                name="image"
                 accept="image/*"
                 onChange={(e) => handleImageUpload(e.target.files[0])}
                 disabled={uploading}
@@ -299,9 +301,11 @@ const CarouselManager = () => {
 
             <div className="form-row">
               <div className="form-group">
-                <label>Title (Optional)</label>
+                <label htmlFor="carousel-title">Title (Optional)</label>
                 <input
                   type="text"
+                  id="carousel-title"
+                  name="title"
                   value={formData.title}
                   onChange={(e) => setFormData({...formData, title: e.target.value})}
                   placeholder="e.g., Palazzo"
@@ -309,9 +313,11 @@ const CarouselManager = () => {
               </div>
 
               <div className="form-group">
-                <label>Subtitle (Optional)</label>
+                <label htmlFor="carousel-subtitle">Subtitle (Optional)</label>
                 <input
                   type="text"
+                  id="carousel-subtitle"
+                  name="subtitle"
                   value={formData.subtitle}
                   onChange={(e) => setFormData({...formData, subtitle: e.target.value})}
                   placeholder="e.g., Contemporary Comfort"
