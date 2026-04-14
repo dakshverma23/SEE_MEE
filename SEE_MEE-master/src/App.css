@@ -1,0 +1,58 @@
+.app {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  position: relative;
+  z-index: 1;
+}
+
+/* Organic Shape Borders */
+.organic-border {
+  position: relative;
+  border-radius: 60% 40% 70% 30% / 40% 50% 60% 50%;
+  overflow: hidden;
+  animation: morphShape 8s ease-in-out infinite;
+}
+
+@keyframes morphShape {
+  0%, 100% {
+    border-radius: 60% 40% 70% 30% / 40% 50% 60% 50%;
+  }
+  50% {
+    border-radius: 40% 60% 50% 70% / 60% 40% 50% 60%;
+  }
+}
+
+/* Textured Background */
+.textured-bg {
+  position: relative;
+  background: linear-gradient(135deg, var(--soft-pink), var(--peach));
+}
+
+.textured-bg::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background-image: 
+    repeating-linear-gradient(45deg, transparent, transparent 2px, rgba(255, 255, 255, 0.03) 2px, rgba(255, 255, 255, 0.03) 4px),
+    repeating-linear-gradient(-45deg, transparent, transparent 2px, rgba(0, 0, 0, 0.02) 2px, rgba(0, 0, 0, 0.02) 4px);
+  opacity: 0.5;
+}
+
+/* Floating Elements */
+.floating-shape {
+  position: absolute;
+  border-radius: 50%;
+  filter: blur(60px);
+  opacity: 0.4;
+  animation: float 6s ease-in-out infinite;
+}
+
+@keyframes float {
+  0%, 100% {
+    transform: translate(0, 0) scale(1);
+  }
+  50% {
+    transform: translate(20px, -20px) scale(1.1);
+  }
+}

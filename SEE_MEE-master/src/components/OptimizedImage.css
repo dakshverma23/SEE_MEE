@@ -1,0 +1,39 @@
+.optimized-image-wrapper {
+  position: relative;
+  overflow: hidden;
+  width: 100%;
+  height: 100%;
+}
+
+.optimized-image-blur,
+.optimized-image-main {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: center;
+}
+
+.optimized-image-blur {
+  filter: blur(20px);
+  transform: scale(1.1);
+  opacity: 1;
+  transition: opacity 0.5s ease-out;
+  z-index: 1;
+}
+
+.optimized-image-blur.loaded {
+  opacity: 0;
+}
+
+.optimized-image-main {
+  opacity: 0;
+  transition: opacity 0.5s ease-in;
+  z-index: 2;
+}
+
+.optimized-image-main.loaded {
+  opacity: 1;
+}
