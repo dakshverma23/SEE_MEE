@@ -6,6 +6,8 @@ import Hero from './components/Hero'
 import Footer from './components/Footer'
 import NewArrivals from './components/NewArrivals'
 import ScrollToTop from './components/ScrollToTop'
+import Cart from './components/Cart'
+import Wishlist from './components/Wishlist'
 import { CartProvider } from './context/CartContext'
 import { AuthProvider } from './context/AuthContext'
 import './App.css'
@@ -16,12 +18,12 @@ const Fabrics = lazy(() => import('./components/Categories'))
 const FeaturedCollection = lazy(() => import('./components/FeaturedCollection'))
 const Magazine = lazy(() => import('./components/Magazine'))
 const About = lazy(() => import('./components/About'))
-const Cart = lazy(() => import('./components/Cart'))
-const Wishlist = lazy(() => import('./components/Wishlist'))
 
 // Lazy load route pages
 const Auth = lazy(() => import('./pages/Auth'))
 const Orders = lazy(() => import('./pages/Orders'))
+const CartPage = lazy(() => import('./pages/CartPage'))
+const Checkout = lazy(() => import('./pages/Checkout'))
 const MagazinePage = lazy(() => import('./pages/MagazinePage'))
 const CollectionsPage = lazy(() => import('./pages/CollectionsPage'))
 const NewArrivalsPage = lazy(() => import('./pages/NewArrivalsPage'))
@@ -55,10 +57,8 @@ function App() {
         </Suspense>
       </main>
       <Footer />
-      <Suspense fallback={null}>
-        <Cart isOpen={isCartOpen} onClose={() => setIsCartOpen(false)} />
-        <Wishlist isOpen={isWishlistOpen} onClose={() => setIsWishlistOpen(false)} />
-      </Suspense>
+      <Cart isOpen={isCartOpen} onClose={() => setIsCartOpen(false)} />
+      <Wishlist isOpen={isWishlistOpen} onClose={() => setIsWishlistOpen(false)} />
     </>
   )
 
@@ -74,10 +74,8 @@ function App() {
         </Suspense>
       </main>
       <Footer />
-      <Suspense fallback={null}>
-        <Cart isOpen={isCartOpen} onClose={() => setIsCartOpen(false)} />
-        <Wishlist isOpen={isWishlistOpen} onClose={() => setIsWishlistOpen(false)} />
-      </Suspense>
+      <Cart isOpen={isCartOpen} onClose={() => setIsCartOpen(false)} />
+      <Wishlist isOpen={isWishlistOpen} onClose={() => setIsWishlistOpen(false)} />
     </>
   )
 
@@ -115,6 +113,12 @@ function App() {
                 
                 {/* Orders Page */}
                 <Route path="/orders" element={<Orders />} />
+
+                {/* Cart Page */}
+                <Route path="/cart" element={<PageWithNav><CartPage /></PageWithNav>} />
+
+                {/* Checkout Page */}
+                <Route path="/checkout" element={<PageWithNav><Checkout /></PageWithNav>} />
 
                 {/* Magazine Page */}
                 <Route path="/magazine" element={<PageWithNav><MagazinePage /></PageWithNav>} />

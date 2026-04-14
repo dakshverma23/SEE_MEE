@@ -135,18 +135,34 @@ const Hero = () => {
         {thumbnails.map((item, idx) => {
           const position = getImagePosition(idx)
           
-          // Debug logging for mobile
-          if (isMobile && idx < 3) {
-            console.log(`Mobile - idx: ${idx}, activeIndex: ${activeIndex}, position: ${position}, category: ${item.category}`)
-          }
-          
-          // On mobile/tablet, don't apply Framer Motion animations
+          // On mobile/tablet, show 3 images at once (left, center, right)
           if (isMobile) {
+            // Only render the 3 visible images
+            if (Math.abs(position) > 1) return null;
+
+            // Calculate horizontal offset for 3-image layout
+            const getXOffset = (pos) => {
+              if (pos === 0) return 0;        // Center
+              if (pos === 1) return 75;       // Right side
+              if (pos === -1) return -75;     // Left side
+              return 0;
+            };
+
             return (
-              <div 
+              <motion.div 
                 key={idx}
-                className={`carousel-arch position-${position}`}
+                className={`carousel-arch mobile-arch position-${position}`}
                 onClick={() => position !== 0 && setActiveIndex(idx)}
+                animate={{
+                  x: `${getXOffset(position)}%`,
+                  scale: position === 0 ? 1 : 0.7,
+                  opacity: position === 0 ? 1 : 0.6,
+                  zIndex: position === 0 ? 3 : 2
+                }}
+                transition={{
+                  duration: 2,
+                  ease: [0.22, 0.61, 0.36, 1]
+                }}
               >
                 <div className="carousel-image-container">
                   <img 
@@ -155,14 +171,19 @@ const Hero = () => {
                     fetchpriority={position === 0 ? "high" : "low"}
                     loading={Math.abs(position) <= 1 ? "eager" : "lazy"}
                     crossOrigin="anonymous"
-                    style={{ objectPosition: 'center 20%' }}
                   />
                 </div>
-                <div className="carousel-label">
+                <motion.div 
+                  className="carousel-label"
+                  animate={{
+                    opacity: position === 0 ? 1 : 0.7
+                  }}
+                  transition={{ duration: 0.5 }}
+                >
                   <span className="label-category">{item.category}</span>
                   <span className="label-desc">{item.desc}</span>
-                </div>
-              </div>
+                </motion.div>
+              </motion.div>
             )
           }
           

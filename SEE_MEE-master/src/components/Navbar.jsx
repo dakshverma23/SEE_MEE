@@ -153,7 +153,7 @@ const Navbar = ({ onCartOpen, onWishlistOpen }) => {
             className="icon-btn cart-btn"
             whileHover={{ scale: 1.1 }}
             whileTap={{ scale: 0.95 }}
-            onClick={onCartOpen}
+            onClick={() => navigate('/cart')}
             title="Cart"
           >
             <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor">

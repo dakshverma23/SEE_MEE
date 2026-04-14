@@ -506,3 +506,25 @@
     font-size: 1rem;
   }
 }
+
+/* View Cart Button */
+.view-cart-btn {
+  width: 100%;
+  padding: 14px;
+  margin-bottom: 10px;
+  font-family: var(--font-body);
+  font-size: 1rem;
+  font-weight: 600;
+  color: var(--charcoal);
+  background: white;
+  border: 2px solid var(--gold);
+  border-radius: 4px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  letter-spacing: 0.5px;
+}
+
+.view-cart-btn:hover {
+  background: rgba(212, 175, 55, 0.1);
+  border-color: #c49b2e;
+}

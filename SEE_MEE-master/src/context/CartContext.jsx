@@ -51,23 +51,43 @@ export const CartProvider = ({ children }) => {
   }, [wishlist])
 
   const addToCart = (product) => {
+    console.log('Adding product to cart:', product)
     setCart(prevCart => {
-      const existingItem = prevCart.find(item => item.id === product.id)
+      console.log('Current cart:', prevCart)
+      
+      // Normalize product ID - use _id if id doesn't exist (MongoDB products)
+      const productId = product.id || product._id
+      const normalizedProduct = {
+        ...product,
+        id: productId
+      }
+      
+      const existingItem = prevCart.find(item => {
+        const itemId = item.id || item._id
+        return itemId === productId
+      })
+      console.log('Existing item found:', existingItem)
 
       if (existingItem) {
-        return prevCart.map(item =>
-          item.id === product.id
+        console.log('Product already in cart, increasing quantity')
+        return prevCart.map(item => {
+          const itemId = item.id || item._id
+          return itemId === productId
             ? { ...item, quantity: item.quantity + 1 }
             : item
-        )
+        })
       }
 
-      return [...prevCart, { ...product, quantity: 1 }]
+      console.log('Adding new product to cart')
+      return [...prevCart, { ...normalizedProduct, quantity: 1 }]
     })
   }
 
   const removeFromCart = (productId) => {
-    setCart(prevCart => prevCart.filter(item => item.id !== productId))
+    setCart(prevCart => prevCart.filter(item => {
+      const itemId = item.id || item._id
+      return itemId !== productId
+    }))
   }
 
   const updateQuantity = (productId, quantity) => {
@@ -77,9 +97,10 @@ export const CartProvider = ({ children }) => {
     }
 
     setCart(prevCart =>
-      prevCart.map(item =>
-        item.id === productId ? { ...item, quantity } : item
-      )
+      prevCart.map(item => {
+        const itemId = item.id || item._id
+        return itemId === productId ? { ...item, quantity } : item
+      })
     )
   }
 
@@ -89,8 +110,16 @@ export const CartProvider = ({ children }) => {
 
   const getCartTotal = () => {
     return cart.reduce((total, item) => {
-      const price = parseInt(item.price.replace(/[₹,]/g, ''))
-      return total + (price * item.quantity)
+      // Handle both string and number prices, with safety checks
+      let price = 0
+      if (item.price) {
+        if (typeof item.price === 'string') {
+          price = parseInt(item.price.replace(/[₹,]/g, '')) || 0
+        } else if (typeof item.price === 'number') {
+          price = item.price
+        }
+      }
+      return total + (price * (item.quantity || 1))
     }, 0).toLocaleString('en-IN')
   }
 
@@ -100,14 +129,27 @@ export const CartProvider = ({ children }) => {
 
   const toggleWishlist = (product) => {
     setWishlist(prevWishlist => {
-      const exists = prevWishlist.find(item => item.id === product.id)
+      // Normalize product ID
+      const productId = product.id || product._id
+      const normalizedProduct = {
+        ...product,
+        id: productId
+      }
+      
+      const exists = prevWishlist.find(item => {
+        const itemId = item.id || item._id
+        return itemId === productId
+      })
       
       let newWishlist
       if (exists) {
-        newWishlist = prevWishlist.filter(item => item.id !== product.id)
+        newWishlist = prevWishlist.filter(item => {
+          const itemId = item.id || item._id
+          return itemId !== productId
+        })
         console.log('Removed from wishlist:', product.name)
       } else {
-        newWishlist = [...prevWishlist, product]
+        newWishlist = [...prevWishlist, normalizedProduct]
         console.log('Added to wishlist:', product.name)
       }
       
@@ -117,7 +159,10 @@ export const CartProvider = ({ children }) => {
   }
 
   const isInWishlist = (productId) => {
-    return wishlist.some(item => item.id === productId)
+    return wishlist.some(item => {
+      const itemId = item.id || item._id
+      return itemId === productId
+    })
   }
 
   const getWishlistCount = () => {
